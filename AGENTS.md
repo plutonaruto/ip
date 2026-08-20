@@ -33,6 +33,8 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 After each code update:
 
 * Update `test/ui-test-plan.md` when the change affects commands or console output.
+* Preserve coverage for existing commands when refactoring the command parser.
+* Interleave valid and invalid commands in error-handling cases, then list the tasks to verify that rejected input did not change application state.
 * Invoke the project-specific `test-ui` skill to run the UI test plan.
 * Stop and report the actual and expected output if a UI test fails.
 
