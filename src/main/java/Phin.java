@@ -55,6 +55,22 @@ public class Phin {
                 } catch (NumberFormatException exception) {
                     System.out.println("    Please provide a valid task number after mark.");
                 }
+            } else if (command.startsWith("unmark ")) {
+                String indexText = command.substring("unmark ".length()).trim();
+
+                try {
+                    int taskIndex = Integer.parseInt(indexText) - 1;
+
+                    if (taskIndex < 0 || taskIndex >= taskCount) {
+                        System.out.println("    That task number is not in your list.");
+                    } else {
+                        completedTasks[taskIndex] = false;
+                        System.out.println("    OK, I've marked this task as not done yet:");
+                        System.out.println("      [ ] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException exception) {
+                    System.out.println("    Please provide a valid task number after unmark.");
+                }
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
