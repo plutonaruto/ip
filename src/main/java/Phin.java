@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -5,7 +6,6 @@ import java.util.Scanner;
  */
 public class Phin {
     private static final String DIVIDER = "____________________________________________________________";
-    private static final int MAX_TASKS = 100;
 
     /**
      * Runs Phin's command loop, storing tasks until the user enters {@code bye}.
@@ -14,8 +14,7 @@ public class Phin {
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(DIVIDER);
         System.out.println("Phin");
@@ -35,38 +34,37 @@ public class Phin {
             try {
                 if (command.equals("list")) {
                     System.out.println("    Here are the tasks in your list:");
-                    for (int i = 0; i < taskCount; i++) {
-                        System.out.println("    " + (i + 1) + "." + tasks[i]);
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println("    " + (i + 1) + "." + tasks.get(i));
                     }
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    int taskIndex = parseTaskIndex(command, "mark", taskCount);
-                    tasks[taskIndex].markAsDone();
+                    int taskIndex = parseTaskIndex(command, "mark", tasks.size());
+                    tasks.get(taskIndex).markAsDone();
                     System.out.println("    Fine. I've marked this task as done:");
-                    System.out.println("      " + tasks[taskIndex]);
+                    System.out.println("      " + tasks.get(taskIndex));
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    int taskIndex = parseTaskIndex(command, "unmark", taskCount);
-                    tasks[taskIndex].markAsNotDone();
+                    int taskIndex = parseTaskIndex(command, "unmark", tasks.size());
+                    tasks.get(taskIndex).markAsNotDone();
                     System.out.println("    Fine. I've marked this task as not done:");
-                    System.out.println("      " + tasks[taskIndex]);
+                    System.out.println("      " + tasks.get(taskIndex));
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    ensureTaskCapacity(taskCount);
                     String description = command.substring("todo".length()).trim();
                     requireText(description,
                             "A todo without a description? Give me something to work with.");
-                    tasks[taskCount++] = new Todo(description);
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    Task task = new Todo(description);
+                    tasks.add(task);
+                    printAddedTask(task, tasks.size());
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    ensureTaskCapacity(taskCount);
                     String detailsText = command.substring("deadline".length()).trim();
                     String[] details = detailsText.split("\\s+/by\\s+", 2);
                     if (details.length < 2 || details[0].isBlank() || details[1].isBlank()) {
                         throw new PhinException(
                                 "Deadlines need a description and a time. Try: deadline TASK /by TIME");
                     }
-                    tasks[taskCount++] = new Deadline(details[0].trim(), details[1].trim());
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    Task task = new Deadline(details[0].trim(), details[1].trim());
+                    tasks.add(task);
+                    printAddedTask(task, tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
-                    ensureTaskCapacity(taskCount);
                     String detailsText = command.substring("event".length()).trim();
                     String[] descriptionAndTimes = detailsText.split("\\s+/from\\s+", 2);
                     String[] times = descriptionAndTimes.length < 2
@@ -78,9 +76,10 @@ public class Phin {
                         throw new PhinException(
                                 "Events need all their details. Try: event TASK /from START /to END");
                     }
-                    tasks[taskCount++] = new Event(descriptionAndTimes[0].trim(),
+                    Task task = new Event(descriptionAndTimes[0].trim(),
                             times[0].trim(), times[1].trim());
-                    printAddedTask(tasks[taskCount - 1], taskCount);
+                    tasks.add(task);
+                    printAddedTask(task, tasks.size());
                 } else {
                     throw new PhinException(
                             "That command means nothing to me. Try list, todo, deadline, event, mark, or unmark.");
@@ -136,18 +135,6 @@ public class Phin {
                     + " isn't in the list. Pick a number from 1 to " + taskCount + ".");
         }
         return taskNumber - 1;
-    }
-
-    /**
-     * Prevents the fixed-size task array from overflowing.
-     *
-     * @param taskCount number of tasks currently stored
-     * @throws PhinException if no more tasks can be stored
-     */
-    private static void ensureTaskCapacity(int taskCount) throws PhinException {
-        if (taskCount >= MAX_TASKS) {
-            throw new PhinException("The list is full. Apparently 100 tasks weren't enough.");
-        }
     }
 
     /**
