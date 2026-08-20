@@ -47,6 +47,12 @@ public class Phin {
                     tasks.get(taskIndex).markAsNotDone();
                     System.out.println("    Fine. I've marked this task as not done:");
                     System.out.println("      " + tasks.get(taskIndex));
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    int taskIndex = parseTaskIndex(command, "delete", tasks.size());
+                    Task removedTask = tasks.remove(taskIndex);
+                    System.out.println("    Noted. I've removed this task:");
+                    System.out.println("      " + removedTask);
+                    System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring("todo".length()).trim();
                     requireText(description,
@@ -82,7 +88,7 @@ public class Phin {
                     printAddedTask(task, tasks.size());
                 } else {
                     throw new PhinException(
-                            "That command means nothing to me. Try list, todo, deadline, event, mark, or unmark.");
+                            "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.");
                 }
             } catch (PhinException exception) {
                 System.out.println("    Seriously? " + exception.getMessage());
@@ -106,7 +112,7 @@ public class Phin {
     }
 
     /**
-     * Converts a mark or unmark argument to a valid zero-based task index.
+     * Converts a task-number argument to a valid zero-based task index.
      *
      * @param command complete command entered by the user
      * @param commandWord command whose argument is being parsed

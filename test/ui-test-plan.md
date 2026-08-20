@@ -198,7 +198,110 @@ Phin
 I'm Phin. Apparently I have to deal with this.
 What do you want?
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, or unmark.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+## Test case: Delete a task and renumber the remaining list
+
+Aim: Verify that deleting a task reports the removed task and that later tasks move up to close the gap.
+
+### Input
+
+```input
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+todo join sports club
+delete 3
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] read book
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [D][ ] return book (by: June 6th)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+    Now you have 3 tasks in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] join sports club
+    Now you have 4 tasks in the list.
+____________________________________________________________
+    Noted. I've removed this task:
+      [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+    Now you have 3 tasks in the list.
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+    2.[D][ ] return book (by: June 6th)
+    3.[T][ ] join sports club
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+## Test case: Reject invalid delete commands
+
+Aim: Verify that missing, nonnumeric, and out-of-range task numbers do not remove tasks, while a later valid deletion still works.
+
+### Input
+
+```input
+todo keep this
+delete
+todo remove this
+delete two
+delete 3
+delete 2
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] keep this
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Seriously? Tell me which task to delete. Try: delete NUMBER
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] remove this
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Seriously? Task numbers are, inconveniently, numbers. Try: delete NUMBER
+____________________________________________________________
+    Seriously? Task 3 isn't in the list. Pick a number from 1 to 2.
+____________________________________________________________
+    Noted. I've removed this task:
+      [T][ ] remove this
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] keep this
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
