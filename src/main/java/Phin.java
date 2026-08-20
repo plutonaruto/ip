@@ -69,10 +69,28 @@ public class Phin {
                 } catch (NumberFormatException exception) {
                     System.out.println("    Please provide a valid task number after unmark.");
                 }
-            } else {
-                tasks[taskCount] = new Task(command);
+            } else if (command.startsWith("todo ")) {
+                String description = command.substring("todo ".length());
+                tasks[taskCount] = new Todo(description);
                 taskCount++;
-                System.out.println("    added: " + command);
+                System.out.println("    Got it. I've added this task:");
+                System.out.println("      " + tasks[taskCount - 1]);
+                System.out.println("    Now you have " + taskCount + " tasks in the list.");
+            } else if (command.startsWith("deadline ")) {
+                String[] details = command.substring("deadline ".length()).split(" /by ", 2);
+                tasks[taskCount] = new Deadline(details[0], details[1]);
+                taskCount++;
+                System.out.println("    Got it. I've added this task:");
+                System.out.println("      " + tasks[taskCount - 1]);
+                System.out.println("    Now you have " + taskCount + " tasks in the list.");
+            } else if (command.startsWith("event ")) {
+                String[] descriptionAndTimes = command.substring("event ".length()).split(" /from ", 2);
+                String[] times = descriptionAndTimes[1].split(" /to ", 2);
+                tasks[taskCount] = new Event(descriptionAndTimes[0], times[0], times[1]);
+                taskCount++;
+                System.out.println("    Got it. I've added this task:");
+                System.out.println("      " + tasks[taskCount - 1]);
+                System.out.println("    Now you have " + taskCount + " tasks in the list.");
             }
 
             System.out.println(DIVIDER);
