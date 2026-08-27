@@ -1,21 +1,27 @@
+import java.time.LocalDate;
+
 /**
  * Represents a task that takes place between specified start and end times.
  */
 public class Event extends Task {
-    protected String from;
-    protected String to;
+    protected LocalDate from;
+    protected LocalDate to;
 
     /**
      * Creates an event task that has not been completed yet.
      *
      * @param description description of the event
-     * @param from date or time when the event starts
-     * @param to date or time when the event ends
+     * @param from start date in yyyy-MM-dd format
+     * @param to end date in yyyy-MM-dd format
+     * @throws IllegalArgumentException if a date is invalid or the end precedes the start
      */
     public Event(String description, String from, String to) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.from = TaskDate.parse(from);
+        this.to = TaskDate.parse(to);
+        if (this.to.isBefore(this.from)) {
+            throw new IllegalArgumentException("An event's end date cannot be before its start date.");
+        }
     }
 
     /**
@@ -25,6 +31,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + TaskDate.format(from)
+                + " to: " + TaskDate.format(to) + ")";
     }
 }

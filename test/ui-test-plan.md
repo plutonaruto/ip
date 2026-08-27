@@ -10,8 +10,8 @@ Aim: Verify that todos, deadlines, and events are stored polymorphically and ret
 
 ```input
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-10-20
+event project meeting /from 2019-10-15 /to 2019-10-16
 mark 2
 list
 bye
@@ -30,20 +30,20 @@ ____________________________________________________________
     Now you have 1 tasks in the list.
 ____________________________________________________________
     Fine. I've added this task:
-      [D][ ] return book (by: Sunday)
+      [D][ ] return book (by: Oct 20 2019)
     Now you have 2 tasks in the list.
 ____________________________________________________________
     Fine. I've added this task:
-      [E][ ] project meeting (from: Mon 2pm to: 4pm)
+      [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
     Now you have 3 tasks in the list.
 ____________________________________________________________
     Fine. I've marked this task as done:
-      [D][X] return book (by: Sunday)
+      [D][X] return book (by: Oct 20 2019)
 ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] borrow book
-    2.[D][X] return book (by: Sunday)
-    3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+    2.[D][X] return book (by: Oct 20 2019)
+    3.[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -100,9 +100,9 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
-## Test case: Preserve free-form deadline text
+## Test case: Reject free-form deadline text
 
-Aim: Verify that deadline dates and times are stored and displayed as strings without date parsing.
+Aim: Verify that ambiguous free-form dates are rejected instead of stored.
 
 ### Input
 
@@ -119,9 +119,7 @@ Phin
 I'm Phin. Apparently I have to deal with this.
 What do you want?
 ____________________________________________________________
-    Fine. I've added this task:
-      [D][ ] do homework (by: no idea :-p)
-    Now you have 1 tasks in the list.
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -137,9 +135,9 @@ Aim: Verify that missing descriptions and scheduling details produce specific gu
 todo read book
 todo
 deadline return book
-deadline submit report /by Friday
-event meeting /from 2pm
-event demo /from 3pm /to 4pm
+deadline submit report /by 2019-10-18
+event meeting /from 2019-10-15
+event demo /from 2019-10-15 /to 2019-10-16
 list
 bye
 ```
@@ -161,19 +159,19 @@ ____________________________________________________________
     Seriously? Deadlines need a description and a time. Try: deadline TASK /by TIME
 ____________________________________________________________
     Fine. I've added this task:
-      [D][ ] submit report (by: Friday)
+      [D][ ] submit report (by: Oct 18 2019)
     Now you have 2 tasks in the list.
 ____________________________________________________________
     Seriously? Events need all their details. Try: event TASK /from START /to END
 ____________________________________________________________
     Fine. I've added this task:
-      [E][ ] demo (from: 3pm to: 4pm)
+      [E][ ] demo (from: Oct 15 2019 to: Oct 16 2019)
     Now you have 3 tasks in the list.
 ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] read book
-    2.[D][ ] submit report (by: Friday)
-    3.[E][ ] demo (from: 3pm to: 4pm)
+    2.[D][ ] submit report (by: Oct 18 2019)
+    3.[E][ ] demo (from: Oct 15 2019 to: Oct 16 2019)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -212,8 +210,8 @@ Aim: Verify that deleting a task reports the removed task and that later tasks m
 
 ```input
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 /to 2019-10-16
 todo join sports club
 delete 3
 list
@@ -233,11 +231,11 @@ ____________________________________________________________
     Now you have 1 tasks in the list.
 ____________________________________________________________
     Fine. I've added this task:
-      [D][ ] return book (by: June 6th)
+      [D][ ] return book (by: Jun 06 2019)
     Now you have 2 tasks in the list.
 ____________________________________________________________
     Fine. I've added this task:
-      [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+      [E][ ] project meeting (from: Aug 06 2019 to: Oct 16 2019)
     Now you have 3 tasks in the list.
 ____________________________________________________________
     Fine. I've added this task:
@@ -245,12 +243,12 @@ ____________________________________________________________
     Now you have 4 tasks in the list.
 ____________________________________________________________
     Noted. I've removed this task:
-      [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+      [E][ ] project meeting (from: Aug 06 2019 to: Oct 16 2019)
     Now you have 3 tasks in the list.
 ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] read book
-    2.[D][ ] return book (by: June 6th)
+    2.[D][ ] return book (by: Jun 06 2019)
     3.[T][ ] join sports club
 ____________________________________________________________
     Finally. Bye.
@@ -313,8 +311,8 @@ Aim: Load every task type, interleave rejected and valid changes, and verify unm
 
 ```saved
 T|1|read+book
-D|0|return+book|Sunday
-E|0|meeting|2pm|4pm
+D|0|return+book|2019-10-20
+E|0|meeting|2019-10-15|2019-10-16
 ```
 
 ### Input
@@ -345,15 +343,15 @@ ____________________________________________________________
     Seriously? Task 9 isn't in the list. Pick a number from 1 to 3.
 ____________________________________________________________
     Fine. I've marked this task as done:
-      [D][X] return book (by: Sunday)
+      [D][X] return book (by: Oct 20 2019)
 ____________________________________________________________
     Noted. I've removed this task:
-      [E][ ] meeting (from: 2pm to: 4pm)
+      [E][ ] meeting (from: Oct 15 2019 to: Oct 16 2019)
     Now you have 2 tasks in the list.
 ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] read book
-    2.[D][X] return book (by: Sunday)
+    2.[D][X] return book (by: Oct 20 2019)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -364,7 +362,7 @@ What do you want?
 ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] read book
-    2.[D][X] return book (by: Sunday)
+    2.[D][X] return book (by: Oct 20 2019)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -456,6 +454,150 @@ What do you want?
 ____________________________________________________________
     Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
 ____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
+____________________________________________________________
+```
+
+## Test case: Validate calendar dates and persist typed dates
+
+Aim: Interleave valid dates with impossible dates, wrong formats, invalid endpoints, and reversed ranges; verify the list and every date after restart.
+
+### Input
+
+```input
+deadline leap day /by 2024-02-29
+deadline invalid /by 2023-02-29
+event holiday /from 2024-12-31 /to 2025-01-01
+deadline invalid /by 2024-04-31
+event reversed /from 2024-03-02 /to 2024-03-01
+mark 1
+event invalid /from 2024-03-01 /to 2024-13-01
+deadline invalid /by 2/12/2019 1800
+event same day /from 2024-03-01 /to 2024-03-01
+deadline invalid /by 2024-2-03
+list
+bye
+# restart
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [D][ ] leap day (by: Feb 29 2024)
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Fine. I've added this task:
+      [E][ ] holiday (from: Dec 31 2024 to: Jan 01 2025)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Seriously? An event's end date cannot be before its start date.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [D][X] leap day (by: Feb 29 2024)
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Fine. I've added this task:
+      [E][ ] same day (from: Mar 01 2024 to: Mar 01 2024)
+    Now you have 3 tasks in the list.
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[D][X] leap day (by: Feb 29 2024)
+    2.[E][ ] holiday (from: Dec 31 2024 to: Jan 01 2025)
+    3.[E][ ] same day (from: Mar 01 2024 to: Mar 01 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[D][X] leap day (by: Feb 29 2024)
+    2.[E][ ] holiday (from: Dec 31 2024 to: Jan 01 2025)
+    3.[E][ ] same day (from: Mar 01 2024 to: Mar 01 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+
+## Test case: Preserve legacy dates on failed startup
+
+Aim: Reject an old free-form deadline without overwriting the file, verified by a second startup.
+
+```saved
+D|0|return+book|Sunday
+```
+
+### Input
+
+```input
+todo ignored
+bye
+# restart
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
+____________________________________________________________
+```
+
+
+## Test case: Reject impossible saved dates
+
+Aim: Reject invalid calendar dates loaded from disk without crashing.
+
+```saved
+E|0|invalid|2024-02-30|2024-03-01
+```
+
+### Input
+
+```input
+bye
+```
+
+### Expected output
+
+```expected
 ____________________________________________________________
 Phin
 I'm Phin. Apparently I have to deal with this.
