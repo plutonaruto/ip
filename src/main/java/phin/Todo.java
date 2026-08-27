@@ -7,7 +7,7 @@ public class Todo extends Task {
     /**
      * Creates a to-do task that has not been completed yet.
      *
-     * @param description description of the task
+     * @param description description of the task.
      */
     public Todo(String description) {
         super(description);
@@ -16,7 +16,7 @@ public class Todo extends Task {
     /**
      * Formats this task with the to-do type indicator.
      *
-     * @return the formatted to-do task
+     * @return the formatted to-do task.
      */
     @Override
     public String toString() {

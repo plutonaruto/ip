@@ -1,7 +1,12 @@
 package phin;
 
-/** Interprets console commands without changing tasks or performing input/output. */
+/**
+ * Interprets console commands without changing tasks or performing input/output.
+ */
 public class Parser {
+    /**
+     * Prevents instantiation of this stateless parsing utility.
+     */
     private Parser() {
         // Utility class: parsing does not need per-instance state.
     }
@@ -9,9 +14,9 @@ public class Parser {
     /**
      * Recognizes command words using the existing exact-match and space rules.
      *
-     * @param command complete, untrimmed input line
-     * @return recognized command word
-     * @throws PhinException if the command is unknown or takes unexpected arguments
+     * @param command complete, untrimmed input line.
+     * @return recognized command word.
+     * @throws PhinException if the command is unknown or takes unexpected arguments.
      */
     public static String parseCommandWord(String command) throws PhinException {
         if (command.equals("list") || command.equals("bye")) {
@@ -29,10 +34,10 @@ public class Parser {
     /**
      * Constructs a task only after its command fields and dates are validated.
      *
-     * @param command complete task-creation command
-     * @return new task, not yet added to the list
-     * @throws PhinException if the command is not a valid task-creation command
-     * @throws IllegalArgumentException if a date or event range is invalid
+     * @param command complete task-creation command.
+     * @return new task, not yet added to the list.
+     * @throws PhinException if the command is not a valid task-creation command.
+     * @throws IllegalArgumentException if a date or event range is invalid.
      */
     public static Task parseTask(String command) throws PhinException {
         switch (parseCommandWord(command)) {
@@ -71,9 +76,9 @@ public class Parser {
     /**
      * Rejects a required command field when it contains no visible text.
      *
-     * @param text field value to validate
-     * @param errorMessage explanation shown when the field is blank
-     * @throws PhinException if the field is blank
+     * @param text field value to validate.
+     * @param errorMessage explanation shown when the field is blank.
+     * @throws PhinException if the field is blank.
      */
     private static void requireText(String text, String errorMessage) throws PhinException {
         if (text.isBlank()) {
@@ -84,11 +89,11 @@ public class Parser {
     /**
      * Converts a task-number argument to a valid zero-based task index.
      *
-     * @param command complete command entered by the user
-     * @param commandWord command whose argument is being parsed
-     * @param taskCount number of tasks currently stored
-     * @return zero-based index of the selected task
-     * @throws PhinException if the argument is missing, nonnumeric, or outside the list
+     * @param command complete command entered by the user.
+     * @param commandWord command whose argument is being parsed.
+     * @param taskCount number of tasks currently stored.
+     * @return zero-based index of the selected task.
+     * @throws PhinException if the argument is missing, nonnumeric, or outside the list.
      */
     public static int parseTaskIndex(String command, String commandWord, int taskCount)
             throws PhinException {
