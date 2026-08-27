@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,19 +9,28 @@ public class Phin {
     private static final String DIVIDER = "____________________________________________________________";
 
     /**
-     * Runs Phin's command loop, storing tasks until the user enters {@code bye}.
+     * Loads saved tasks and runs the command loop, saving after each accepted change.
      *
      * @param args command-line arguments; not used by this application
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage();
+        ArrayList<Task> tasks;
 
         System.out.println(DIVIDER);
         System.out.println("Phin");
         System.out.println("I'm Phin. Apparently I have to deal with this.");
         System.out.println("What do you want?");
         System.out.println(DIVIDER);
+
+        try {
+            tasks = storage.load();
+        } catch (IOException | SecurityException exception) {
+            System.out.println("    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.");
+            System.out.println(DIVIDER);
+            return;
+        }
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -89,6 +99,13 @@ public class Phin {
                 } else {
                     throw new PhinException(
                             "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.");
+                }
+                if (!command.equals("list")) {
+                    try {
+                        storage.save(tasks);
+                    } catch (IOException | SecurityException exception) {
+                        System.out.println("    Couldn't save data/phin.txt. Changes are only in memory; check the data folder.");
+                    }
                 }
             } catch (PhinException exception) {
                 System.out.println("    Seriously? " + exception.getMessage());

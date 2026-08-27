@@ -14,7 +14,7 @@ if (-not (Test-Path -LiteralPath $TestPlan)) {
 }
 
 $plan = Get-Content -Raw -LiteralPath $TestPlan
-$casePattern = '(?ms)^## Test case: (?<name>.+?)\r?\n\r?\nAim: (?<aim>.+?)\r?\n\r?\n### Input\r?\n\r?\n```input\r?\n(?<input>.*?)\r?\n```\r?\n\r?\n### Expected output\r?\n\r?\n```expected\r?\n(?<expected>.*?)\r?\n```'
+$casePattern = '(?ms)^## Test case: (?<name>.+?)\r?\n\r?\nAim: (?<aim>.+?)\r?\n\r?\n(?:```saved\r?\n(?<saved>.*?)\r?\n```\r?\n\r?\n)?### Input\r?\n\r?\n```input\r?\n(?<input>.*?)\r?\n```\r?\n\r?\n### Expected output\r?\n\r?\n```expected\r?\n(?<expected>.*?)\r?\n```'
 $cases = [regex]::Matches($plan, $casePattern)
 if ($cases.Count -eq 0) {
     throw "No test cases found in $TestPlan"
@@ -36,7 +36,22 @@ try {
         $inputText = $testCase.Groups['input'].Value -replace "`r`n", "`n"
         $expected = $testCase.Groups['expected'].Value -replace "`r`n", "`n"
 
-        $actualLines = $inputText | & java -cp $buildDirectory Phin
+        $caseDirectory = Join-Path $buildDirectory ([guid]::NewGuid().ToString())
+        New-Item -ItemType Directory -Path $caseDirectory | Out-Null
+        if ($testCase.Groups['saved'].Success) {
+            $dataDirectory = Join-Path $caseDirectory 'data'
+            New-Item -ItemType Directory -Path $dataDirectory | Out-Null
+            [System.IO.File]::WriteAllText((Join-Path $dataDirectory 'phin.txt'), $testCase.Groups['saved'].Value)
+        }
+        Push-Location $caseDirectory
+        try {
+            $actualLines = foreach ($session in ($inputText -split '(?m)^# restart\r?\n')) {
+                $session | & java -cp $buildDirectory Phin
+                if ($LASTEXITCODE -ne 0) { throw 'Phin exited unsuccessfully.' }
+            }
+        } finally {
+            Pop-Location
+        }
         $actual = ($actualLines -join "`n")
 
         Write-Output "=== $name ==="
@@ -58,6 +73,11 @@ try {
     Write-Output "All $($cases.Count) UI test case(s) passed."
 } finally {
     if (Test-Path -LiteralPath $buildDirectory) {
-        Remove-Item -LiteralPath $buildDirectory -Recurse -Force
+        $resolvedBuild = [System.IO.Path]::GetFullPath($buildDirectory)
+        $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
+        if (-not $resolvedBuild.StartsWith($tempRoot) -or (Split-Path $resolvedBuild -Leaf) -notlike 'phin-ui-tests-*') {
+            throw 'Refusing to delete a directory outside the test workspace.'
+        }
+        Remove-Item -LiteralPath $resolvedBuild -Recurse -Force
     }
 }

@@ -306,3 +306,161 @@ ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
 ```
+
+## Test case: Load saved task types and persist changes across restarts
+
+Aim: Load every task type, interleave rejected and valid changes, and verify unmark and deletion survive a restart.
+
+```saved
+T|1|read+book
+D|0|return+book|Sunday
+E|0|meeting|2pm|4pm
+```
+
+### Input
+
+```input
+unmark 1
+delete 9
+mark 2
+delete 3
+list
+bye
+# restart
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've marked this task as not done:
+      [T][ ] read book
+____________________________________________________________
+    Seriously? Task 9 isn't in the list. Pick a number from 1 to 3.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [D][X] return book (by: Sunday)
+____________________________________________________________
+    Noted. I've removed this task:
+      [E][ ] meeting (from: 2pm to: 4pm)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Sunday)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Sunday)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+
+## Test case: Create missing storage and round-trip separators
+
+Aim: Create a missing data folder, preserve pipe and percent characters, and persist an empty list after deleting the last task.
+
+### Input
+
+```input
+todo a | b %
+bye
+# restart
+list
+delete 1
+bye
+# restart
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] a | b %
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] a | b %
+____________________________________________________________
+    Noted. I've removed this task:
+      [T][ ] a | b %
+    Now you have 0 tasks in the list.
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the tasks in your list:
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+
+## Test case: Reject corrupt storage without overwriting it
+
+Aim: Stop safely on an invalid record, including on a second startup.
+
+```saved
+T|2|invalid
+```
+
+### Input
+
+```input
+todo cannot overwrite
+bye
+# restart
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
+____________________________________________________________
+```
