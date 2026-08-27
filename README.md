@@ -68,6 +68,35 @@ Run it with:
 powershell -ExecutionPolicy Bypass -File .codex/skills/test-ui/scripts/run-ui-tests.ps1
 ```
 
+## Building and distributing the executable JAR
+
+With JDK 25 configured, build the executable using the supplied Shadow plugin:
+
+```powershell
+.\gradlew.bat clean test shadowJar
+```
+
+The output is `build/libs/phin.jar`. Copy just this file into an empty folder,
+open a terminal in that folder, and run it with Java 25:
+
+```powershell
+java -jar "phin.jar"
+```
+
+Recipients need Java 25 but do not need Gradle or the source code. Use a terminal
+rather than double-clicking the JAR. Phin creates `data/phin.txt` beside the JAR
+on the first task change. Keep that data folder when replacing the JAR.
+
+Verify the packaged app with the same UI cases, each in an isolated folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .codex/skills/test-ui/scripts/run-ui-tests.ps1 -JarPath build/libs/phin.jar
+```
+
+Distribute `phin.jar` as an asset on a GitHub release, not as a committed file.
+Generated files under `build/` are already excluded from Git. Download the JAR
+asset rather than GitHub's automatically generated source archives.
+
 ## Package layout and manual console launch
 
 All classes belong to the `phin` package under `src/main/java/phin`.
@@ -86,7 +115,8 @@ java -cp out phin.Phin
 
 ## Saved tasks
 
-Run Phin with the project root as the working directory. Tasks are loaded from
+For development, run Phin with the project root as the working directory;
+for the distributed JAR, run it from the folder containing the JAR. Tasks are loaded from
 `data/phin.txt` at startup and saved after add, mark, unmark, and delete commands.
 The folder is created on the first save and is excluded from Git.
 

@@ -1,5 +1,6 @@
 param(
-    [string]$TestPlan = "test/ui-test-plan.md"
+    [string]$TestPlan = "test/ui-test-plan.md",
+    [string]$JarPath = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -13,6 +14,10 @@ if (-not (Test-Path -LiteralPath $TestPlan)) {
     throw "UI test plan not found: $TestPlan"
 }
 
+if ($JarPath) {
+    $JarPath = (Resolve-Path -LiteralPath $JarPath -ErrorAction Stop).Path
+}
+
 $plan = Get-Content -Raw -LiteralPath $TestPlan
 $casePattern = '(?ms)^## Test case: (?<name>.+?)\r?\n\r?\nAim: (?<aim>.+?)\r?\n\r?\n(?:```saved\r?\n(?<saved>.*?)\r?\n```\r?\n\r?\n)?### Input\r?\n\r?\n```input\r?\n(?<input>.*?)\r?\n```\r?\n\r?\n### Expected output\r?\n\r?\n```expected\r?\n(?<expected>.*?)\r?\n```'
 $cases = [regex]::Matches($plan, $casePattern)
@@ -24,10 +29,12 @@ $buildDirectory = Join-Path ([System.IO.Path]::GetTempPath()) ("phin-ui-tests-" 
 New-Item -ItemType Directory -Path $buildDirectory | Out-Null
 
 try {
-    $sourceFiles = Get-ChildItem -LiteralPath "src/main/java" -Recurse -Filter "*.java" | ForEach-Object FullName
-    & javac -d $buildDirectory $sourceFiles
-    if ($LASTEXITCODE -ne 0) {
-        throw "Compilation failed."
+    if (-not $JarPath) {
+        $sourceFiles = Get-ChildItem -LiteralPath "src/main/java" -Recurse -Filter "*.java" | ForEach-Object FullName
+        & javac -d $buildDirectory $sourceFiles
+        if ($LASTEXITCODE -ne 0) {
+            throw "Compilation failed."
+        }
     }
 
     foreach ($testCase in $cases) {
@@ -43,10 +50,17 @@ try {
             New-Item -ItemType Directory -Path $dataDirectory | Out-Null
             [System.IO.File]::WriteAllText((Join-Path $dataDirectory 'phin.txt'), $testCase.Groups['saved'].Value)
         }
+        if ($JarPath) {
+            Copy-Item -LiteralPath $JarPath -Destination (Join-Path $caseDirectory 'phin.jar')
+        }
         Push-Location $caseDirectory
         try {
             $actualLines = foreach ($session in ($inputText -split '(?m)^# restart\r?\n')) {
-                $session | & java -cp $buildDirectory phin.Phin
+                if ($JarPath) {
+                    $session | & java -jar 'phin.jar'
+                } else {
+                    $session | & java -cp $buildDirectory phin.Phin
+                }
                 if ($LASTEXITCODE -ne 0) { throw 'Phin exited unsuccessfully.' }
             }
         } finally {

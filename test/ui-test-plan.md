@@ -5,6 +5,11 @@ The cases below are executed by the project-specific `test-ui` skill. Output com
 The runner compiles sources recursively from `src/main/java` and launches
 `phin.Phin`. Packaging does not change the command inputs or expected output below.
 
+To verify the executable JAR instead, pass `-JarPath build/libs/phin.jar` to
+the same runner after building it. The runner copies only the JAR into each
+case directory (plus any specified saved-data fixture) and runs `java -jar phin.jar`
+from that directory. Restart cases reuse that directory to verify persistence.
+
 ## Test case: Add and manage all task types
 
 Aim: Verify that todos, deadlines, and events are stored polymorphically and retain their type-specific details when listed or marked.
