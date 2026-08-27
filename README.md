@@ -19,3 +19,17 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Saved tasks
+
+Run Phin with the project root as the working directory. Tasks are loaded from
+`data/phin.txt` at startup and saved after add, mark, unmark, and delete commands.
+The folder is created on the first save and is excluded from Git.
+
+Records use `TYPE|STATUS|DESCRIPTION` with deadline or event time fields appended.
+Types are T, D, and E; status is 0 or 1. Fields use UTF-8 URL encoding: spaces are
+`+`, literal plus signs are `%2B`, and pipes are `%7C`.
+
+If loading fails, Phin stops without changing the file. Correct or back up and
+remove the damaged file before restarting. If saving fails, changes remain in
+memory; fix the folder permissions and retry a change before exiting.
