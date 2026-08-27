@@ -46,6 +46,10 @@ public class Phin {
                     case "list":
                         ui.showTasks(tasks.asList());
                         break;
+                    case "find":
+                        String keyword = Parser.parseFindKeyword(command);
+                        ui.showMatchingTasks(tasks.find(keyword));
+                        break;
                     case "mark":
                         // Fallthrough
                     case "unmark":
@@ -65,7 +69,7 @@ public class Phin {
                         ui.showAddedTask(task, tasks.size());
                         break;
                 }
-                if (!commandWord.equals("list")) {
+                if (!commandWord.equals("list") && !commandWord.equals("find")) {
                     try {
                         storage.save(tasks.asList());
                     } catch (IOException | SecurityException exception) {

@@ -204,7 +204,7 @@ Phin
 I'm Phin. Apparently I have to deal with this.
 What do you want?
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -648,12 +648,12 @@ ____________________________________________________________
       [T][ ] keep
     Now you have 1 tasks in the list.
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
 ____________________________________________________________
     Fine. I've marked this task as done:
       [T][X] keep
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
 ____________________________________________________________
     Seriously? Tell me which task to unmark. Try: unmark NUMBER
 ____________________________________________________________
@@ -662,7 +662,7 @@ ____________________________________________________________
 ____________________________________________________________
     Seriously? Task numbers are, inconveniently, numbers. Try: mark NUMBER
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
 ____________________________________________________________
     Fine. I've added this task:
       [T][ ] second
@@ -673,6 +673,112 @@ ____________________________________________________________
     Here are the tasks in your list:
     1.[T][ ] keep
     2.[T][ ] second
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+
+## Test case: Find descriptions without changing saved tasks
+
+Aim: Interleave valid and invalid searches, empty lists, case-sensitive substrings, phrases, and dates; list and restart to verify ordering, types, completion status, and persistent state.
+
+### Input
+
+```input
+find book
+find
+todo read book
+find book
+find
+deadline return book /by 2024-03-01
+mark 2
+find book
+findbook
+event bookshelf /from 2024-03-01 /to 2024-03-02
+find Book
+find read book
+find Mar
+find book
+list
+bye
+# restart
+find book
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the matching tasks in your list:
+____________________________________________________________
+    Seriously? Tell me what to find. Try: find KEYWORD
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] read book
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Here are the matching tasks in your list:
+    1.[T][ ] read book
+____________________________________________________________
+    Seriously? Tell me what to find. Try: find KEYWORD
+____________________________________________________________
+    Fine. I've added this task:
+      [D][ ] return book (by: Mar 01 2024)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [D][X] return book (by: Mar 01 2024)
+____________________________________________________________
+    Here are the matching tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Mar 01 2024)
+____________________________________________________________
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+____________________________________________________________
+    Fine. I've added this task:
+      [E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
+    Now you have 3 tasks in the list.
+____________________________________________________________
+    Here are the matching tasks in your list:
+____________________________________________________________
+    Here are the matching tasks in your list:
+    1.[T][ ] read book
+____________________________________________________________
+    Here are the matching tasks in your list:
+____________________________________________________________
+    Here are the matching tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Mar 01 2024)
+    3.[E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Mar 01 2024)
+    3.[E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the matching tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Mar 01 2024)
+    3.[E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+    2.[D][X] return book (by: Mar 01 2024)
+    3.[E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________

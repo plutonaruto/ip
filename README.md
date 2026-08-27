@@ -1,5 +1,19 @@
 # Phin
 
+## Finding tasks (Level 9)
+
+Use `find book` to search task descriptions for a case-sensitive substring.
+For example, it matches `read book` and `bookshelf`, but not `Book`.
+Use `find read book` to search for the complete phrase `read book`;
+surrounding whitespace is ignored, but internal spaces are significant.
+Dates, task types, and completion icons are not searched. Missing or blank
+keywords are rejected with usage guidance.
+
+Matches retain their original order, type, and completion status. Results
+are numbered from 1 for display only: use `list` to obtain task numbers for
+`mark`, `unmark`, and `delete`. With no matches, only the matching-tasks
+heading is printed. Searching never modifies tasks or writes the saved file.
+
 Phin is a chatbot written in Java. Given below are instructions on how to set it up.
 
 ## Setting up in Intellij

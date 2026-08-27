@@ -48,6 +48,23 @@ public class TaskList {
     }
 
     /**
+     * Finds tasks whose descriptions contain the case-sensitive search phrase.
+     * The result preserves order and shares tasks, but cannot change collection membership.
+     *
+     * @param keyword Nonblank search phrase validated by the parser.
+     * @return Unmodifiable matching tasks in their original order.
+     */
+    public List<Task> find(String keyword) {
+        List<Task> matches = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.description.contains(keyword)) {
+                matches.add(task);
+            }
+        }
+        return List.copyOf(matches);
+    }
+
+    /**
      * Removes and returns the task at a zero-based index.
      *
      * @param index Zero-based index of the task to remove.
