@@ -10,7 +10,7 @@ public class Task {
     /**
      * Creates a task that has not been completed yet.
      *
-     * @param description description of the task
+     * @param description description of the task.
      */
     public Task(String description) {
         this.description = description;
@@ -20,7 +20,7 @@ public class Task {
     /**
      * Returns the icon used to display the task's completion status.
      *
-     * @return {@code X} when done, or a space when not done
+     * @return {@code X} when done, or a space when not done.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
@@ -43,7 +43,7 @@ public class Task {
     /**
      * Formats the task for display in the task list and command responses.
      *
-     * @return status icon followed by the task description
+     * @return status icon followed by the task description.
      */
     @Override
     public String toString() {

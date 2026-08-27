@@ -12,10 +12,10 @@ public class Event extends Task {
     /**
      * Creates an event task that has not been completed yet.
      *
-     * @param description description of the event
-     * @param from start date in yyyy-MM-dd format
-     * @param to end date in yyyy-MM-dd format
-     * @throws IllegalArgumentException if a date is invalid or the end precedes the start
+     * @param description description of the event.
+     * @param from start date in yyyy-MM-dd format.
+     * @param to end date in yyyy-MM-dd format.
+     * @throws IllegalArgumentException if a date is invalid or the end precedes the start.
      */
     public Event(String description, String from, String to) {
         super(description);
@@ -29,7 +29,7 @@ public class Event extends Task {
     /**
      * Formats this task with its type indicator and time range.
      *
-     * @return the formatted event task
+     * @return the formatted event task.
      */
     @Override
     public String toString() {

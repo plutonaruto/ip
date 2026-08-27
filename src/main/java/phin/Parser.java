@@ -1,6 +1,8 @@
 package phin;
 
-/** Interprets console commands without changing tasks or performing input/output. */
+/**
+ * Interprets console commands without changing tasks or performing input/output.
+ */
 public class Parser {
     private Parser() {
         // Utility class: parsing does not need per-instance state.
@@ -9,9 +11,9 @@ public class Parser {
     /**
      * Recognizes command words using the existing exact-match and space rules.
      *
-     * @param command complete, untrimmed input line
-     * @return recognized command word
-     * @throws PhinException if the command is unknown or takes unexpected arguments
+     * @param command complete, untrimmed input line.
+     * @return recognized command word.
+     * @throws PhinException if the command is unknown or takes unexpected arguments.
      */
     public static String parseCommandWord(String command) throws PhinException {
         if (command.equals("list") || command.equals("bye")) {
@@ -29,51 +31,51 @@ public class Parser {
     /**
      * Constructs a task only after its command fields and dates are validated.
      *
-     * @param command complete task-creation command
-     * @return new task, not yet added to the list
-     * @throws PhinException if the command is not a valid task-creation command
-     * @throws IllegalArgumentException if a date or event range is invalid
+     * @param command complete task-creation command.
+     * @return new task, not yet added to the list.
+     * @throws PhinException if the command is not a valid task-creation command.
+     * @throws IllegalArgumentException if a date or event range is invalid.
      */
     public static Task parseTask(String command) throws PhinException {
         switch (parseCommandWord(command)) {
-        case "todo":
-            String description = command.substring("todo".length()).trim();
-            requireText(description,
-                    "A todo without a description? Give me something to work with.");
-            return new Todo(description);
-        case "deadline":
-            String detailsText = command.substring("deadline".length()).trim();
-            String[] details = detailsText.split("\\s+/by\\s+", 2);
-            if (details.length < 2 || details[0].isBlank() || details[1].isBlank()) {
-                throw new PhinException(
-                        "Deadlines need a description and a time. Try: deadline TASK /by TIME");
-            }
-            return new Deadline(details[0].trim(), details[1].trim());
-        case "event":
-            String eventText = command.substring("event".length()).trim();
-            String[] descriptionAndTimes = eventText.split("\\s+/from\\s+", 2);
-            String[] times = descriptionAndTimes.length < 2
-                    ? new String[0]
-                    : descriptionAndTimes[1].split("\\s+/to\\s+", 2);
-            if (descriptionAndTimes.length < 2 || times.length < 2
-                    || descriptionAndTimes[0].isBlank()
-                    || times[0].isBlank() || times[1].isBlank()) {
-                throw new PhinException(
-                        "Events need all their details. Try: event TASK /from START /to END");
-            }
-            return new Event(descriptionAndTimes[0].trim(),
-                    times[0].trim(), times[1].trim());
-        default:
-            throw new PhinException("Expected a todo, deadline, or event command.");
+            case "todo":
+                String description = command.substring("todo".length()).trim();
+                requireText(description,
+                        "A todo without a description? Give me something to work with.");
+                return new Todo(description);
+            case "deadline":
+                String detailsText = command.substring("deadline".length()).trim();
+                String[] details = detailsText.split("\\s+/by\\s+", 2);
+                if (details.length < 2 || details[0].isBlank() || details[1].isBlank()) {
+                    throw new PhinException(
+                            "Deadlines need a description and a time. Try: deadline TASK /by TIME");
+                }
+                return new Deadline(details[0].trim(), details[1].trim());
+            case "event":
+                String eventText = command.substring("event".length()).trim();
+                String[] descriptionAndTimes = eventText.split("\\s+/from\\s+", 2);
+                String[] times = descriptionAndTimes.length < 2
+                        ? new String[0]
+                        : descriptionAndTimes[1].split("\\s+/to\\s+", 2);
+                if (descriptionAndTimes.length < 2 || times.length < 2
+                        || descriptionAndTimes[0].isBlank()
+                        || times[0].isBlank() || times[1].isBlank()) {
+                    throw new PhinException(
+                            "Events need all their details. Try: event TASK /from START /to END");
+                }
+                return new Event(descriptionAndTimes[0].trim(),
+                        times[0].trim(), times[1].trim());
+            default:
+                throw new PhinException("Expected a todo, deadline, or event command.");
         }
     }
 
     /**
      * Rejects a required command field when it contains no visible text.
      *
-     * @param text field value to validate
-     * @param errorMessage explanation shown when the field is blank
-     * @throws PhinException if the field is blank
+     * @param text field value to validate.
+     * @param errorMessage explanation shown when the field is blank.
+     * @throws PhinException if the field is blank.
      */
     private static void requireText(String text, String errorMessage) throws PhinException {
         if (text.isBlank()) {
@@ -84,11 +86,11 @@ public class Parser {
     /**
      * Converts a task-number argument to a valid zero-based task index.
      *
-     * @param command complete command entered by the user
-     * @param commandWord command whose argument is being parsed
-     * @param taskCount number of tasks currently stored
-     * @return zero-based index of the selected task
-     * @throws PhinException if the argument is missing, nonnumeric, or outside the list
+     * @param command complete command entered by the user.
+     * @param commandWord command whose argument is being parsed.
+     * @param taskCount number of tasks currently stored.
+     * @return zero-based index of the selected task.
+     * @throws PhinException if the argument is missing, nonnumeric, or outside the list.
      */
     public static int parseTaskIndex(String command, String commandWord, int taskCount)
             throws PhinException {
@@ -112,5 +114,4 @@ public class Parser {
         }
         return taskNumber - 1;
     }
-
 }

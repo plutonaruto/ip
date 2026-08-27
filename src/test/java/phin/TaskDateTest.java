@@ -7,7 +7,9 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-/** Checks strict calendar parsing and stable English display formatting. */
+/**
+ * Checks strict calendar parsing and stable English display formatting.
+ */
 class TaskDateTest {
     @Test
     void parse_validCalendarBoundaries_returnsDate() {

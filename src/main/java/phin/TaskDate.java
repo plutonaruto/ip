@@ -5,11 +5,15 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
-/** Provides shared strict date parsing and consistent English display formatting. */
+/**
+ * Provides shared strict date parsing and consistent English display formatting.
+ */
 public class TaskDate {
     private static final DateTimeFormatter DISPLAY = DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
 
-    /** Parses a date-only value, rejecting invalid calendar dates and other input formats. */
+    /**
+     * Parses a date-only value, rejecting invalid calendar dates and other input formats.
+     */
     public static LocalDate parse(String text) {
         try {
             if (!text.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
@@ -21,7 +25,9 @@ public class TaskDate {
         }
     }
 
-    /** Formats a date for display without changing its ISO representation used in storage. */
+    /**
+     * Formats a date for display without changing its ISO representation used in storage.
+     */
     public static String format(LocalDate date) {
         return date.format(DISPLAY);
     }

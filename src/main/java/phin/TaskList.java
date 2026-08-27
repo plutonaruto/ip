@@ -3,11 +3,15 @@ package phin;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Owns the ordered task collection and provides operations that change it. */
+/**
+ * Owns the ordered task collection and provides operations that change it.
+ */
 public class TaskList {
     private final List<Task> tasks;
 
-    /** Creates an empty task list. */
+    /**
+     * Creates an empty task list.
+     */
     public TaskList() {
         this(List.of());
     }
@@ -16,21 +20,29 @@ public class TaskList {
      * Copies the loaded collection so callers cannot add or remove tasks through it.
      * Task objects themselves are shared, preserving their saved completion status.
      *
-     * @param loadedTasks tasks loaded from storage, in their saved order
+     * @param loadedTasks tasks loaded from storage, in their saved order.
      */
     public TaskList(List<Task> loadedTasks) {
         tasks = new ArrayList<>(loadedTasks);
     }
 
+    /**
+     * Returns the number of tasks in the list.
+     */
     public int size() {
         return tasks.size();
     }
 
+    /**
+     * Appends a task to the end of the list.
+     */
     public void add(Task task) {
         tasks.add(task);
     }
 
-    /** Removes the task at a validated zero-based index and returns it for display. */
+    /**
+     * Removes the task at a validated zero-based index and returns it for display.
+     */
     public Task delete(int index) {
         return tasks.remove(index);
     }
@@ -38,9 +50,9 @@ public class TaskList {
     /**
      * Updates completion status and returns the affected task for display.
      *
-     * @param index zero-based index already validated by the parser
-     * @param isDone whether the task should be marked done
-     * @return the updated task
+     * @param index zero-based index already validated by the parser.
+     * @param isDone whether the task should be marked done.
+     * @return the updated task.
      */
     public Task setDone(int index, boolean isDone) {
         Task task = tasks.get(index);

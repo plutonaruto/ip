@@ -11,11 +11,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Saves tasks as UTF-8 text, using URL encoding to preserve separators in task fields. */
+/**
+ * Saves tasks as UTF-8 text, using URL encoding to preserve separators in task fields.
+ */
 public class Storage {
     private final Path file = Path.of("data", "phin.txt");
 
-    /** Loads all tasks; rejects corrupt data rather than silently overwriting it later. */
+    /**
+     * Loads all tasks; rejects corrupt data rather than silently overwriting it later.
+     */
     public ArrayList<Task> load() throws IOException {
         List<String> lines;
         try {
@@ -34,7 +38,9 @@ public class Storage {
         return tasks;
     }
 
-    /** Writes a complete replacement first so a failed write does not truncate saved tasks. */
+    /**
+     * Writes a complete replacement first so a failed write does not truncate saved tasks.
+     */
     public void save(List<Task> tasks) throws IOException {
         Files.createDirectories(file.getParent());
         Path temporary = Files.createTempFile(file.getParent(), "phin-", ".tmp");
@@ -57,12 +63,16 @@ public class Storage {
         }
     }
 
-    /** Encodes arbitrary field text so pipes and line breaks cannot become record separators. */
+    /**
+     * Encodes arbitrary field text so pipes and line breaks cannot become record separators.
+     */
     private static String encode(String text) {
         return URLEncoder.encode(text, StandardCharsets.UTF_8);
     }
 
-    /** Validates and reconstructs one record, including completion status and task details. */
+    /**
+     * Validates and reconstructs one record, including completion status and task details.
+     */
     private static Task decode(String line) {
         String[] fields = line.split("\\|", -1);
         if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
