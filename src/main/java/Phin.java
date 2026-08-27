@@ -1,75 +1,61 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Starts the Phin chatbot application.
  */
 public class Phin {
-    private static final String DIVIDER = "____________________________________________________________";
-
     /**
      * Loads saved tasks and runs the command loop, saving after each accepted change.
      *
      * @param args command-line arguments; not used by this application
      */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
         Storage storage = new Storage();
         ArrayList<Task> tasks;
 
-        System.out.println(DIVIDER);
-        System.out.println("Phin");
-        System.out.println("I'm Phin. Apparently I have to deal with this.");
-        System.out.println("What do you want?");
-        System.out.println(DIVIDER);
+        ui.showWelcome();
 
         try {
             tasks = storage.load();
         } catch (IOException | SecurityException exception) {
-            System.out.println("    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.");
-            System.out.println(DIVIDER);
+            ui.showLoadingError();
+            ui.showLine();
             return;
         }
 
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+        while (ui.hasNextCommand()) {
+            String command = ui.readCommand();
 
             if (command.equals("bye")) {
-                System.out.println("    Finally. Bye.");
-                System.out.println(DIVIDER);
+                ui.showGoodbye();
+                ui.showLine();
                 break;
             }
 
             try {
                 if (command.equals("list")) {
-                    System.out.println("    Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println("    " + (i + 1) + "." + tasks.get(i));
-                    }
+                    ui.showTasks(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
                     int taskIndex = parseTaskIndex(command, "mark", tasks.size());
                     tasks.get(taskIndex).markAsDone();
-                    System.out.println("    Fine. I've marked this task as done:");
-                    System.out.println("      " + tasks.get(taskIndex));
+                    ui.showMarkedTask(tasks.get(taskIndex), true);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
                     int taskIndex = parseTaskIndex(command, "unmark", tasks.size());
                     tasks.get(taskIndex).markAsNotDone();
-                    System.out.println("    Fine. I've marked this task as not done:");
-                    System.out.println("      " + tasks.get(taskIndex));
+                    ui.showMarkedTask(tasks.get(taskIndex), false);
                 } else if (command.equals("delete") || command.startsWith("delete ")) {
                     int taskIndex = parseTaskIndex(command, "delete", tasks.size());
                     Task removedTask = tasks.remove(taskIndex);
-                    System.out.println("    Noted. I've removed this task:");
-                    System.out.println("      " + removedTask);
-                    System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showDeletedTask(removedTask, tasks.size());
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring("todo".length()).trim();
                     requireText(description,
                             "A todo without a description? Give me something to work with.");
                     Task task = new Todo(description);
                     tasks.add(task);
-                    printAddedTask(task, tasks.size());
+                    ui.showAddedTask(task, tasks.size());
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
                     String detailsText = command.substring("deadline".length()).trim();
                     String[] details = detailsText.split("\\s+/by\\s+", 2);
@@ -79,7 +65,7 @@ public class Phin {
                     }
                     Task task = new Deadline(details[0].trim(), details[1].trim());
                     tasks.add(task);
-                    printAddedTask(task, tasks.size());
+                    ui.showAddedTask(task, tasks.size());
                 } else if (command.equals("event") || command.startsWith("event ")) {
                     String detailsText = command.substring("event".length()).trim();
                     String[] descriptionAndTimes = detailsText.split("\\s+/from\\s+", 2);
@@ -95,7 +81,7 @@ public class Phin {
                     Task task = new Event(descriptionAndTimes[0].trim(),
                             times[0].trim(), times[1].trim());
                     tasks.add(task);
-                    printAddedTask(task, tasks.size());
+                    ui.showAddedTask(task, tasks.size());
                 } else {
                     throw new PhinException(
                             "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.");
@@ -104,14 +90,14 @@ public class Phin {
                     try {
                         storage.save(tasks);
                     } catch (IOException | SecurityException exception) {
-                        System.out.println("    Couldn't save data/phin.txt. Changes are only in memory; check the data folder.");
+                        ui.showSavingError();
                     }
                 }
             } catch (PhinException | IllegalArgumentException exception) {
-                System.out.println("    Seriously? " + exception.getMessage());
+                ui.showError(exception.getMessage());
             }
 
-            System.out.println(DIVIDER);
+            ui.showLine();
         }
     }
 
@@ -160,15 +146,4 @@ public class Phin {
         return taskNumber - 1;
     }
 
-    /**
-     * Prints Phin's standard confirmation after adding a task.
-     *
-     * @param task task that was added
-     * @param taskCount number of tasks now stored
-     */
-    private static void printAddedTask(Task task, int taskCount) {
-        System.out.println("    Fine. I've added this task:");
-        System.out.println("      " + task);
-        System.out.println("    Now you have " + taskCount + " tasks in the list.");
-    }
 }
