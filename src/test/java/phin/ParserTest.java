@@ -10,6 +10,31 @@ import org.junit.jupiter.api.Test;
 
 /** Checks command boundaries, argument validation, and task construction. */
 class ParserTest {
+    /**
+     * Checks phrase trimming while retaining case and internal spaces.
+     */
+    @Test
+    void parseFindKeyword_validPhrase_preservesSearchText() throws PhinException {
+        assertEquals("find", Parser.parseCommandWord("find"));
+        assertEquals("find", Parser.parseCommandWord("find book"));
+        assertEquals("Read  book", Parser.parseFindKeyword("find   Read  book  "));
+    }
+
+    /**
+     * Checks blank phrases and command boundaries without accepting other commands.
+     */
+    @Test
+    void parseFindKeyword_missingOrWrongCommand_rejected() {
+        for (String command : new String[] {"find", "find   ", "find \t"}) {
+            PhinException exception = assertThrows(PhinException.class,
+                    () -> Parser.parseFindKeyword(command));
+            assertEquals("Tell me what to find. Try: find KEYWORD", exception.getMessage());
+        }
+        for (String command : new String[] {"findbook", "find\tbook", "Find book", "list", "todo book"}) {
+            assertThrows(PhinException.class, () -> Parser.parseFindKeyword(command));
+        }
+    }
+
     @Test
     void parseCommandWord_supportedCommands_recognized() throws PhinException {
         for (String word : new String[] {"list", "bye", "todo", "deadline", "event", "mark", "unmark", "delete"}) {

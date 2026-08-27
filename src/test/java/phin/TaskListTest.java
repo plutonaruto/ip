@@ -13,6 +13,52 @@ import org.junit.jupiter.api.Test;
 
 /** Checks task ordering, status updates, and collection ownership. */
 class TaskListTest {
+    /**
+     * Checks substring matching and preserves task identity, type, status, and order.
+     */
+    @Test
+    void find_matchingDescriptions_preservesTasksAndOrder() {
+        Task first = new Todo("read book");
+        Task second = new Deadline("return book", "2024-03-01");
+        Task third = new Event("bookshelf", "2024-03-01", "2024-03-02");
+        second.markAsDone();
+        TaskList tasks = new TaskList(List.of(first, new Todo("unrelated"), second, third));
+        assertEquals(List.of(first, second, third), tasks.find("book"));
+        assertEquals(List.of(first), tasks.find("read book"));
+        assertTrue(second.isDone);
+        assertFalse(first.isDone);
+        assertFalse(third.isDone);
+        assertEquals(4, tasks.size());
+    }
+
+    /**
+     * Checks that case, dates, type icons, and status icons do not produce false matches.
+     */
+    @Test
+    void find_absentOrNonDescriptionText_returnsEmpty() {
+        TaskList tasks = new TaskList(List.of(new Deadline("read book", "2024-03-01")));
+        for (String keyword : new String[] {"Book", "missing", "Mar", "2024", "[D]", "[ ]"}) {
+            assertTrue(tasks.find(keyword).isEmpty(), keyword);
+        }
+        assertTrue(new TaskList().find("book").isEmpty());
+    }
+
+    /**
+     * Checks that search snapshots cannot structurally edit the stored list.
+     */
+    @Test
+    void find_resultCollection_cannotChangeStoredTasks() {
+        Task first = new Todo("book");
+        TaskList tasks = new TaskList(List.of(first));
+        List<Task> matches = tasks.find("book");
+        assertThrows(UnsupportedOperationException.class, matches::clear);
+        assertThrows(UnsupportedOperationException.class, () -> matches.add(new Todo("external")));
+        assertEquals(List.of(first), tasks.asList());
+        tasks.add(new Todo("second book"));
+        assertEquals(List.of(first), matches);
+        assertEquals(2, tasks.size());
+    }
+
     @Test
     void constructor_loadedList_copiesCollectionButPreservesTasks() {
         Task task = new Todo("saved");

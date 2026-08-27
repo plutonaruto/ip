@@ -17,13 +17,29 @@ public class Parser {
         if (command.equals("list") || command.equals("bye")) {
             return command;
         }
-        for (String word : new String[] {"mark", "unmark", "delete", "todo", "deadline", "event"}) {
+        for (String word : new String[] {"mark", "unmark", "delete", "todo", "deadline", "event", "find"}) {
             if (command.equals(word) || command.startsWith(word + " ")) {
                 return word;
             }
         }
         throw new PhinException(
-                "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.");
+                "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.");
+    }
+
+    /**
+     * Extracts a nonblank search phrase from a find command.
+     *
+     * @param command Complete command entered by the user.
+     * @return Search phrase with surrounding whitespace removed.
+     * @throws PhinException If the command is not find or its phrase is blank.
+     */
+    public static String parseFindKeyword(String command) throws PhinException {
+        if (!parseCommandWord(command).equals("find")) {
+            throw new PhinException("Expected a find command. Try: find KEYWORD");
+        }
+        String keyword = command.substring("find".length()).trim();
+        requireText(keyword, "Tell me what to find. Try: find KEYWORD");
+        return keyword;
     }
 
     /**

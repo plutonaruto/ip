@@ -43,6 +43,18 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays matches with result numbers, without changing their saved task numbers.
+     *
+     * @param matches Matching tasks in their original order.
+     */
+    public void showMatchingTasks(List<Task> matches) {
+        System.out.println("    Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println("    " + (i + 1) + "." + matches.get(i));
+        }
+    }
+
     /** Confirms a status change without modifying the task. */
     public void showMarkedTask(Task task, boolean isDone) {
         System.out.println("    Fine. I've marked this task as " + (isDone ? "done" : "not done") + ":");

@@ -37,28 +37,33 @@ public class Phin {
                     break;
                 }
                 switch (commandWord) {
-                case "list":
-                    ui.showTasks(tasks.asList());
-                    break;
-                case "mark":
-                case "unmark":
-                    int taskIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
-                    boolean isDone = commandWord.equals("mark");
-                    Task updatedTask = tasks.setDone(taskIndex, isDone);
-                    ui.showMarkedTask(updatedTask, isDone);
-                    break;
-                case "delete":
-                    int deletedIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
-                    Task removedTask = tasks.delete(deletedIndex);
-                    ui.showDeletedTask(removedTask, tasks.size());
-                    break;
-                default:
-                    Task task = Parser.parseTask(command);
-                    tasks.add(task);
-                    ui.showAddedTask(task, tasks.size());
-                    break;
+                    case "list":
+                        ui.showTasks(tasks.asList());
+                        break;
+                    case "find":
+                        String keyword = Parser.parseFindKeyword(command);
+                        ui.showMatchingTasks(tasks.find(keyword));
+                        break;
+                    case "mark":
+                        // Fallthrough
+                    case "unmark":
+                        int taskIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
+                        boolean isDone = commandWord.equals("mark");
+                        Task updatedTask = tasks.setDone(taskIndex, isDone);
+                        ui.showMarkedTask(updatedTask, isDone);
+                        break;
+                    case "delete":
+                        int deletedIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
+                        Task removedTask = tasks.delete(deletedIndex);
+                        ui.showDeletedTask(removedTask, tasks.size());
+                        break;
+                    default:
+                        Task task = Parser.parseTask(command);
+                        tasks.add(task);
+                        ui.showAddedTask(task, tasks.size());
+                        break;
                 }
-                if (!commandWord.equals("list")) {
+                if (!commandWord.equals("list") && !commandWord.equals("find")) {
                     try {
                         storage.save(tasks.asList());
                     } catch (IOException | SecurityException exception) {
