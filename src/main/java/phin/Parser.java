@@ -1,3 +1,5 @@
+package phin;
+
 /** Interprets console commands without changing tasks or performing input/output. */
 public class Parser {
     private Parser() {

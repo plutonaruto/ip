@@ -1,3 +1,5 @@
+package phin;
+
 /**
  * Represents a task and its completion status.
  */

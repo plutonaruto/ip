@@ -2,6 +2,9 @@
 
 The cases below are executed by the project-specific `test-ui` skill. Output comparisons are exact.
 
+The runner compiles sources recursively from `src/main/java` and launches
+`phin.Phin`. Packaging does not change the command inputs or expected output below.
+
 ## Test case: Add and manage all task types
 
 Aim: Verify that todos, deadlines, and events are stored polymorphically and retain their type-specific details when listed or marked.

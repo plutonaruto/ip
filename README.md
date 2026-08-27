@@ -13,12 +13,32 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Phin.java` file, right-click it, and choose `Run Phin.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see the following output:
+1. After that, locate the `src/main/java/phin/Phin.java` file, right-click it, and choose `Run Phin.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see the following output:
    ```
-   Hello! I'm Phin.
+   ____________________________________________________________
+   Phin
+   I'm Phin. Apparently I have to deal with this.
+   What do you want?
+   ____________________________________________________________
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Package layout and console launch
+
+All classes belong to the `phin` package under `src/main/java/phin`.
+The entry point is `phin.Phin`; `src/main/java` remains the source root.
+A single package keeps this small application simple without changing class
+access rules. Subpackages can be introduced when more classes warrant them.
+
+To compile and run from the project root in PowerShell with JDK 25:
+
+```powershell
+New-Item -ItemType Directory -Force out | Out-Null
+$sources = Get-ChildItem src/main/java -Recurse -Filter '*.java' | ForEach-Object FullName
+javac -d out $sources
+java -cp out phin.Phin
+```
 
 ## Saved tasks
 

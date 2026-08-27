@@ -24,7 +24,7 @@ $buildDirectory = Join-Path ([System.IO.Path]::GetTempPath()) ("phin-ui-tests-" 
 New-Item -ItemType Directory -Path $buildDirectory | Out-Null
 
 try {
-    $sourceFiles = Get-ChildItem -LiteralPath "src/main/java" -Filter "*.java" | ForEach-Object FullName
+    $sourceFiles = Get-ChildItem -LiteralPath "src/main/java" -Recurse -Filter "*.java" | ForEach-Object FullName
     & javac -d $buildDirectory $sourceFiles
     if ($LASTEXITCODE -ne 0) {
         throw "Compilation failed."
@@ -46,7 +46,7 @@ try {
         Push-Location $caseDirectory
         try {
             $actualLines = foreach ($session in ($inputText -split '(?m)^# restart\r?\n')) {
-                $session | & java -cp $buildDirectory Phin
+                $session | & java -cp $buildDirectory phin.Phin
                 if ($LASTEXITCODE -ne 0) { throw 'Phin exited unsuccessfully.' }
             }
         } finally {

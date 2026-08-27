@@ -1,3 +1,5 @@
+package phin;
+
 /**
  * Represents an invalid command or input that Phin can explain to the user.
  */
