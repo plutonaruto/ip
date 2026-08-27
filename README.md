@@ -33,3 +33,16 @@ Types are T, D, and E; status is 0 or 1. Fields use UTF-8 URL encoding: spaces a
 If loading fails, Phin stops without changing the file. Correct or back up and
 remove the damaged file before restarting. If saving fails, changes remain in
 memory; fix the folder permissions and retry a change before exiting.
+
+## Dates (Level 8)
+
+Deadlines and event endpoints accept real calendar dates in `yyyy-MM-dd`
+format, for example `deadline return book /by 2019-12-02` or
+`event workshop /from 2019-12-02 /to 2019-12-03`. The task list displays
+`Dec 02 2019`. Dates are stored as `LocalDate`; times of day are not supported.
+An event may start and end on the same day, but cannot end before it starts.
+Invalid dates are rejected without adding a task.
+
+Saved dates remain in ISO format. Level 7 files containing free-form dates
+such as `Sunday` must be backed up and edited to use `yyyy-MM-dd` before
+startup. Phin refuses to load invalid dates and does not overwrite that file.

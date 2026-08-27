@@ -1,18 +1,21 @@
+import java.time.LocalDate;
+
 /**
  * Represents a task that must be completed by a specified date or time.
  */
 public class Deadline extends Task {
-    protected String by;
+    protected LocalDate by;
 
     /**
      * Creates a deadline task that has not been completed yet.
      *
      * @param description description of the task
-     * @param by date or time by which the task should be completed
+     * @param by deadline date in yyyy-MM-dd format
+     * @throws IllegalArgumentException if the date is invalid
      */
     public Deadline(String description, String by) {
         super(description);
-        this.by = by;
+        this.by = TaskDate.parse(by);
     }
 
     /**
@@ -22,6 +25,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.toString() + " (by: " + TaskDate.format(by) + ")";
     }
 }

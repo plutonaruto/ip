@@ -107,7 +107,7 @@ public class Phin {
                         System.out.println("    Couldn't save data/phin.txt. Changes are only in memory; check the data folder.");
                     }
                 }
-            } catch (PhinException exception) {
+            } catch (PhinException | IllegalArgumentException exception) {
                 System.out.println("    Seriously? " + exception.getMessage());
             }
 

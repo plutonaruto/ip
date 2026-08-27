@@ -42,9 +42,9 @@ public class Storage {
                 String type = task instanceof Deadline ? "D" : task instanceof Event ? "E" : "T";
                 String line = type + "|" + (task.isDone ? "1" : "0") + "|" + encode(task.description);
                 if (task instanceof Deadline deadline) {
-                    line += "|" + encode(deadline.by);
+                    line += "|" + encode(deadline.by.toString());
                 } else if (task instanceof Event event) {
-                    line += "|" + encode(event.from) + "|" + encode(event.to);
+                    line += "|" + encode(event.from.toString()) + "|" + encode(event.to.toString());
                 }
                 lines.add(line);
             }
