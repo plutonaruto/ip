@@ -54,9 +54,15 @@ Configure the IDE's Gradle JVM to use JDK 25, and reload the Gradle project
 after opening it. The build selects a Java 25 toolchain for compilation
 and running. The `run` task forwards console input to Phin.
 
-The course build also includes JUnit and Shadow configuration for the later
-A-JUnit and A-Jar increments. There are no JUnit tests yet; a successful
-`build` alone does not verify command behavior. Run the UI regression suite:
+The build runs JUnit tests for command parsing, strict dates, and task-list
+operations. Run them separately with `.\gradlew.bat test`; the HTML report
+is at `build/reports/tests/test/index.html`. Test sources are under
+`src/test/java/phin`, matching the production package. Keep these tests
+updated when the corresponding behavior changes.
+
+These tests focus on core logic, not every public method or console message.
+The UI suite additionally checks exact output and persistence across restarts.
+Run it with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .codex/skills/test-ui/scripts/run-ui-tests.ps1
