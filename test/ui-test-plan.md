@@ -606,3 +606,66 @@ ____________________________________________________________
     Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.
 ____________________________________________________________
 ```
+
+## Test case: Preserve command boundaries and reject invalid numbers
+
+Aim: Interleave valid commands with command-prefix lookalikes, unexpected arguments, missing numbers, overflow, and extra numeric arguments; list tasks to verify rejected input leaves state unchanged.
+
+### Input
+
+```input
+todo keep
+todoist reject
+mark 1
+list extra
+unmark
+unmark 1
+mark 2147483648
+bye extra
+todo second
+mark 1 2
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] keep
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [T][X] keep
+____________________________________________________________
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+____________________________________________________________
+    Seriously? Tell me which task to unmark. Try: unmark NUMBER
+____________________________________________________________
+    Fine. I've marked this task as not done:
+      [T][ ] keep
+____________________________________________________________
+    Seriously? Task numbers are, inconveniently, numbers. Try: mark NUMBER
+____________________________________________________________
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, or delete.
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] second
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Seriously? Task numbers are, inconveniently, numbers. Try: mark NUMBER
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] keep
+    2.[T][ ] second
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
