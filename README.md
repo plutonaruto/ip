@@ -24,7 +24,45 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
 
-## Package layout and console launch
+## Building and running with Gradle
+
+Install JDK 25 and set `JAVA_HOME` to its installation directory. Use the
+committed Gradle wrapper; a separate Gradle installation is not needed.
+The first run downloads Gradle and dependencies, so it needs internet access.
+
+`JAVA_HOME` must point to the JDK folder, not `java.exe` or its `bin` folder.
+For example, with JDK 25.0.4 installed at the default Windows location, set
+it for the current PowerShell session using:
+
+```powershell
+$env:JAVA_HOME = 'C:\Program Files\Java\jdk-25.0.4'
+```
+
+Adjust that path to your installed JDK. For a persistent setting, update
+`JAVA_HOME` in Windows Environment Variables and reopen your terminal and IDE.
+
+From the project root in PowerShell:
+
+```powershell
+.\gradlew.bat --version
+.\gradlew.bat clean build
+.\gradlew.bat --console=plain run
+```
+
+On macOS or Linux, use `./gradlew` instead of `.\gradlew.bat`.
+Configure the IDE's Gradle JVM to use JDK 25, and reload the Gradle project
+after opening it. The build selects a Java 25 toolchain for compilation
+and running. The `run` task forwards console input to Phin.
+
+The course build also includes JUnit and Shadow configuration for the later
+A-JUnit and A-Jar increments. There are no JUnit tests yet; a successful
+`build` alone does not verify command behavior. Run the UI regression suite:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .codex/skills/test-ui/scripts/run-ui-tests.ps1
+```
+
+## Package layout and manual console launch
 
 All classes belong to the `phin` package under `src/main/java/phin`.
 The entry point is `phin.Phin`; `src/main/java` remains the source root.
