@@ -41,35 +41,35 @@ public class Parser {
      */
     public static Task parseTask(String command) throws PhinException {
         switch (parseCommandWord(command)) {
-        case "todo":
-            String description = command.substring("todo".length()).trim();
-            requireText(description,
-                    "A todo without a description? Give me something to work with.");
-            return new Todo(description);
-        case "deadline":
-            String detailsText = command.substring("deadline".length()).trim();
-            String[] details = detailsText.split("\\s+/by\\s+", 2);
-            if (details.length < 2 || details[0].isBlank() || details[1].isBlank()) {
-                throw new PhinException(
-                        "Deadlines need a description and a time. Try: deadline TASK /by TIME");
-            }
-            return new Deadline(details[0].trim(), details[1].trim());
-        case "event":
-            String eventText = command.substring("event".length()).trim();
-            String[] descriptionAndTimes = eventText.split("\\s+/from\\s+", 2);
-            String[] times = descriptionAndTimes.length < 2
-                    ? new String[0]
-                    : descriptionAndTimes[1].split("\\s+/to\\s+", 2);
-            if (descriptionAndTimes.length < 2 || times.length < 2
-                    || descriptionAndTimes[0].isBlank()
-                    || times[0].isBlank() || times[1].isBlank()) {
-                throw new PhinException(
-                        "Events need all their details. Try: event TASK /from START /to END");
-            }
-            return new Event(descriptionAndTimes[0].trim(),
-                    times[0].trim(), times[1].trim());
-        default:
-            throw new PhinException("Expected a todo, deadline, or event command.");
+            case "todo":
+                String description = command.substring("todo".length()).trim();
+                requireText(description,
+                        "A todo without a description? Give me something to work with.");
+                return new Todo(description);
+            case "deadline":
+                String detailsText = command.substring("deadline".length()).trim();
+                String[] details = detailsText.split("\\s+/by\\s+", 2);
+                if (details.length < 2 || details[0].isBlank() || details[1].isBlank()) {
+                    throw new PhinException(
+                            "Deadlines need a description and a time. Try: deadline TASK /by TIME");
+                }
+                return new Deadline(details[0].trim(), details[1].trim());
+            case "event":
+                String eventText = command.substring("event".length()).trim();
+                String[] descriptionAndTimes = eventText.split("\\s+/from\\s+", 2);
+                String[] times = descriptionAndTimes.length < 2
+                        ? new String[0]
+                        : descriptionAndTimes[1].split("\\s+/to\\s+", 2);
+                if (descriptionAndTimes.length < 2 || times.length < 2
+                        || descriptionAndTimes[0].isBlank()
+                        || times[0].isBlank() || times[1].isBlank()) {
+                    throw new PhinException(
+                            "Events need all their details. Try: event TASK /from START /to END");
+                }
+                return new Event(descriptionAndTimes[0].trim(),
+                        times[0].trim(), times[1].trim());
+            default:
+                throw new PhinException("Expected a todo, deadline, or event command.");
         }
     }
 
@@ -117,5 +117,4 @@ public class Parser {
         }
         return taskNumber - 1;
     }
-
 }

@@ -8,7 +8,9 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-/** Checks command boundaries, argument validation, and task construction. */
+/**
+ * Checks command boundaries, argument validation, and task construction.
+ */
 class ParserTest {
     @Test
     void parseCommandWord_supportedCommands_recognized() throws PhinException {

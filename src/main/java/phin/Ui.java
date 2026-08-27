@@ -135,7 +135,8 @@ public class Ui {
      * Reports that saved tasks could not be loaded and the data file was left unchanged.
      */
     public void showLoadingError() {
-        System.out.println("    Couldn't load data/phin.txt. Check the file before restarting; it has not been changed.");
+        System.out.println("    Couldn't load data/phin.txt. Check the file before restarting;"
+                + " it has not been changed.");
     }
 
     /**

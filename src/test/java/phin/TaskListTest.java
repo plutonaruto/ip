@@ -11,7 +11,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-/** Checks task ordering, status updates, and collection ownership. */
+/**
+ * Checks task ordering, status updates, and collection ownership.
+ */
 class TaskListTest {
     @Test
     void constructor_loadedList_copiesCollectionButPreservesTasks() {
