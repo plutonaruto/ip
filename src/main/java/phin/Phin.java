@@ -7,9 +7,15 @@ import java.io.IOException;
  */
 public class Phin {
     /**
+     * Creates an application entry-point instance.
+     */
+    public Phin() {
+    }
+
+    /**
      * Loads saved tasks and runs the command loop, saving after each accepted change.
      *
-     * @param args command-line arguments; not used by this application
+     * @param args command-line arguments; not used by this application.
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
