@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Starts the Phin chatbot application.
@@ -13,12 +12,12 @@ public class Phin {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage();
-        ArrayList<Task> tasks;
+        TaskList tasks;
 
         ui.showWelcome();
 
         try {
-            tasks = storage.load();
+            tasks = new TaskList(storage.load());
         } catch (IOException | SecurityException exception) {
             ui.showLoadingError();
             ui.showLine();
@@ -37,22 +36,18 @@ public class Phin {
                 }
                 switch (commandWord) {
                 case "list":
-                    ui.showTasks(tasks);
+                    ui.showTasks(tasks.asList());
                     break;
                 case "mark":
                 case "unmark":
                     int taskIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
                     boolean isDone = commandWord.equals("mark");
-                    if (isDone) {
-                        tasks.get(taskIndex).markAsDone();
-                    } else {
-                        tasks.get(taskIndex).markAsNotDone();
-                    }
-                    ui.showMarkedTask(tasks.get(taskIndex), isDone);
+                    Task updatedTask = tasks.setDone(taskIndex, isDone);
+                    ui.showMarkedTask(updatedTask, isDone);
                     break;
                 case "delete":
                     int deletedIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
-                    Task removedTask = tasks.remove(deletedIndex);
+                    Task removedTask = tasks.delete(deletedIndex);
                     ui.showDeletedTask(removedTask, tasks.size());
                     break;
                 default:
@@ -63,7 +58,7 @@ public class Phin {
                 }
                 if (!commandWord.equals("list")) {
                     try {
-                        storage.save(tasks);
+                        storage.save(tasks.asList());
                     } catch (IOException | SecurityException exception) {
                         ui.showSavingError();
                     }
