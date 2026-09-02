@@ -24,7 +24,7 @@ class TaskListTest {
         Task second = new Deadline("return book", "2024-03-01");
         Task third = new Event("bookshelf", "2024-03-01", "2024-03-02");
         second.markAsDone();
-        TaskList tasks = new TaskList(List.of(first, new Todo("unrelated"), second, third));
+        TaskList tasks = new TaskList(first, new Todo("unrelated"), second, third);
         assertEquals(List.of(first, second, third), tasks.find("book"));
         assertEquals(List.of(first), tasks.find("read book"));
         assertTrue(second.isDone);
@@ -38,7 +38,7 @@ class TaskListTest {
      */
     @Test
     void find_absentOrNonDescriptionText_returnsEmpty() {
-        TaskList tasks = new TaskList(List.of(new Deadline("read book", "2024-03-01")));
+        TaskList tasks = new TaskList(new Deadline("read book", "2024-03-01"));
         for (String keyword : new String[] {"Book", "missing", "Mar", "2024", "[D]", "[ ]"}) {
             assertTrue(tasks.find(keyword).isEmpty(), keyword);
         }
@@ -93,7 +93,7 @@ class TaskListTest {
     void setDone_markAndUnmark_changesOnlySelectedTask() {
         Task first = new Todo("first");
         Task second = new Todo("second");
-        TaskList tasks = new TaskList(List.of(first, second));
+        TaskList tasks = new TaskList(first, second);
         assertSame(second, tasks.setDone(1, true));
         tasks.setDone(1, true);
         assertTrue(second.isDone);

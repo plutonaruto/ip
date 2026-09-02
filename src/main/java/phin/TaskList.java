@@ -13,10 +13,12 @@ public class TaskList {
     private final List<Task> tasks;
 
     /**
-     * Creates an empty task list.
+     * Creates a task list from zero or more tasks supplied directly by a caller.
+     *
+     * @param initialTasks Tasks to store in the given order.
      */
-    public TaskList() {
-        this(List.of());
+    public TaskList(Task... initialTasks) {
+        this(List.of(initialTasks));
     }
 
     /**
