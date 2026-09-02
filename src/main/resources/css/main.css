@@ -1,0 +1,53 @@
+.root {
+    -fx-background-color: #f4f6fb;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+#dialogContainer {
+    -fx-padding: 18px;
+}
+
+.dialog-box {
+    -fx-padding: 3px 0;
+}
+
+.user-message,
+.phin-message {
+    -fx-background-radius: 14px;
+    -fx-padding: 10px 14px;
+}
+
+.user-message {
+    -fx-background-color: #3157d5;
+    -fx-text-fill: white;
+}
+
+.phin-message {
+    -fx-background-color: white;
+    -fx-border-color: #dfe3ee;
+    -fx-border-radius: 14px;
+}
+
+.input-bar {
+    -fx-padding: 12px;
+    -fx-spacing: 8px;
+    -fx-background-color: white;
+    -fx-border-color: #dfe3ee transparent transparent transparent;
+}
+
+.text-field,
+.button {
+    -fx-background-radius: 8px;
+    -fx-padding: 9px 12px;
+}
+
+.button {
+    -fx-background-color: #3157d5;
+    -fx-text-fill: white;
+}

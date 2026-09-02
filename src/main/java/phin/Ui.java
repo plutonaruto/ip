@@ -144,6 +144,15 @@ public class Ui {
     }
 
     /**
+     * Prints a response produced by the chatbot core.
+     *
+     * @param response Complete response without a trailing line separator.
+     */
+    public void showResponse(String response) {
+        System.out.println(response);
+    }
+
+    /**
      * Reports that saved tasks could not be loaded and the data file was left unchanged.
      */
     public void showLoadingError() {

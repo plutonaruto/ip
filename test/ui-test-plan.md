@@ -5,9 +5,10 @@ The cases below are executed by the project-specific `test-ui` skill. Output com
 The runner compiles sources recursively from `src/main/java` and launches
 `phin.Phin`. Packaging does not change the command inputs or expected output below.
 
-To verify the executable JAR instead, pass `-JarPath build/libs/phin.jar` to
+To verify the text interface after adding JavaFX, build `cliJar` and pass
+`-JarPath build/libs/phin-cli.jar` to
 the same runner after building it. The runner copies only the JAR into each
-case directory (plus any specified saved-data fixture) and runs `java -jar phin.jar`
+case directory (plus any specified saved-data fixture) and runs the CLI JAR
 from that directory. Restart cases reuse that directory to verify persistence.
 
 ## Test case: Add and manage all task types
