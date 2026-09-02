@@ -28,8 +28,7 @@ class ParserTest {
     @Test
     void parseFindKeyword_missingOrWrongCommand_rejected() {
         for (String command : new String[] {"find", "find   ", "find \t"}) {
-            PhinException exception = assertThrows(PhinException.class,
-                    () -> Parser.parseFindKeyword(command));
+            PhinException exception = assertThrows(PhinException.class, () -> Parser.parseFindKeyword(command));
             assertEquals("Tell me what to find. Try: find KEYWORD", exception.getMessage());
         }
         for (String command : new String[] {"findbook", "find\tbook", "Find book", "list", "todo book"}) {
@@ -50,7 +49,7 @@ class ParserTest {
     @Test
     void parseCommandWord_wrongBoundaries_rejected() {
         for (String command : new String[] {"", " ", "TODO book", " todo book", "todoist book",
-                "todo\tbook", "list extra", "list ", "bye extra", "marking 1", "unknown"}) {
+            "todo\tbook", "list extra", "list ", "bye extra", "marking 1", "unknown"}) {
             assertThrows(PhinException.class, () -> Parser.parseCommandWord(command), command);
         }
     }
@@ -85,9 +84,9 @@ class ParserTest {
     @Test
     void parseTask_missingFieldsOrWrongCommand_rejected() {
         for (String command : new String[] {"todo", "todo   ", "deadline book", "deadline /by 2024-03-01",
-                "deadline book /by", "event meeting", "event /from 2024-03-01 /to 2024-03-02",
-                "event meeting /from /to 2024-03-02", "event meeting /from 2024-03-01 /to",
-                "event meeting /from 2024-03-01", "list", "bye", "mark 1"}) {
+            "deadline book /by", "event meeting", "event /from 2024-03-01 /to 2024-03-02",
+            "event meeting /from /to 2024-03-02", "event meeting /from 2024-03-01 /to",
+            "event meeting /from 2024-03-01", "list", "bye", "mark 1"}) {
             assertThrows(PhinException.class, () -> Parser.parseTask(command), command);
         }
     }
@@ -95,9 +94,9 @@ class ParserTest {
     @Test
     void parseTask_invalidDatesOrReversedRange_rejected() {
         for (String command : new String[] {"deadline book /by Sunday", "deadline book /by 2023-02-29",
-                "event meeting /from 2024-02-30 /to 2024-03-01",
-                "event meeting /from 2024-03-01 /to 2024-13-01",
-                "event meeting /from 2024-03-02 /to 2024-03-01"}) {
+            "event meeting /from 2024-02-30 /to 2024-03-01",
+            "event meeting /from 2024-03-01 /to 2024-13-01",
+            "event meeting /from 2024-03-02 /to 2024-03-01"}) {
             assertThrows(IllegalArgumentException.class, () -> Parser.parseTask(command), command);
         }
     }
@@ -113,12 +112,12 @@ class ParserTest {
     @Test
     void parseTaskIndex_missingOrNonnumericArguments_explainsError() {
         for (String word : new String[] {"mark", "unmark", "delete"}) {
-            PhinException missing = assertThrows(PhinException.class,
-                    () -> Parser.parseTaskIndex(word + "  ", word, 3));
+            PhinException missing = assertThrows(PhinException.class, () ->
+                    Parser.parseTaskIndex(word + "  ", word, 3));
             assertEquals("Tell me which task to " + word + ". Try: " + word + " NUMBER", missing.getMessage());
             for (String argument : new String[] {"two", "1.5", "1 2", "2147483648", "-2147483649"}) {
-                PhinException invalid = assertThrows(PhinException.class,
-                        () -> Parser.parseTaskIndex(word + " " + argument, word, 3), argument);
+                PhinException invalid = assertThrows(PhinException.class, () ->
+                        Parser.parseTaskIndex(word + " " + argument, word, 3), argument);
                 assertEquals("Task numbers are, inconveniently, numbers. Try: " + word + " NUMBER",
                         invalid.getMessage());
             }

@@ -8,12 +8,6 @@ import java.util.Scanner;
  */
 public class Ui {
     /**
-     * Creates a console interface that reads commands from standard input.
-     */
-    public Ui() {
-    }
-
-    /**
      * Divider printed between command responses.
      */
     private static final String DIVIDER = "____________________________________________________________";
@@ -21,6 +15,12 @@ public class Ui {
      * Reader for commands from standard input.
      */
     private final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Creates a console interface that reads commands from standard input.
+     */
+    public Ui() {
+    }
 
     /**
      * Checks whether another command can be read without reaching the end of input.

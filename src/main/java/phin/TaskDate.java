@@ -10,15 +10,15 @@ import java.util.Locale;
  */
 public class TaskDate {
     /**
+     * English date format used in task descriptions.
+     */
+    private static final DateTimeFormatter DISPLAY = DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
+
+    /**
      * Creates a date utility instance; date operations are available as static methods.
      */
     public TaskDate() {
     }
-
-    /**
-     * English date format used in task descriptions.
-     */
-    private static final DateTimeFormatter DISPLAY = DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
 
     /**
      * Parses a date-only value, rejecting invalid calendar dates and other input formats.

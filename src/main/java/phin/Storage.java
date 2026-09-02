@@ -16,15 +16,15 @@ import java.util.List;
  */
 public class Storage {
     /**
+     * Location of the saved tasks, relative to the working directory.
+     */
+    private final Path file = Path.of("data", "phin.txt");
+
+    /**
      * Creates storage using the default data file location.
      */
     public Storage() {
     }
-
-    /**
-     * Location of the saved tasks, relative to the working directory.
-     */
-    private final Path file = Path.of("data", "phin.txt");
 
     /**
      * Loads saved tasks, rejecting corrupt data to prevent a later accidental overwrite.
