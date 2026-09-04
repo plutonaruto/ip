@@ -1,5 +1,8 @@
 .root {
-    -fx-background-color: #f4f6fb;
+    -fx-background-color: #e8ecf0;
+    -fx-background-image: url("../images/office.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
 }
@@ -7,6 +10,29 @@
 .scroll-pane,
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: rgba(238, 242, 246, 0.78);
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.header {
+    -fx-padding: 16px 22px;
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-border-color: transparent transparent #c4dee9 transparent;
+}
+
+.title {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #173b56;
+}
+
+.subtitle {
+    -fx-text-fill: #4b6475;
+    -fx-font-size: 13px;
 }
 
 #dialogContainer {
@@ -19,19 +45,20 @@
 
 .user-message,
 .phin-message {
-    -fx-background-radius: 14px;
+    -fx-background-radius: 10px;
     -fx-padding: 10px 14px;
 }
 
 .user-message {
-    -fx-background-color: #3157d5;
+    -fx-background-color: #255b9a;
     -fx-text-fill: white;
 }
 
 .phin-message {
+    -fx-text-fill: #193b51;
     -fx-background-color: white;
     -fx-border-color: #dfe3ee;
-    -fx-border-radius: 14px;
+    -fx-border-radius: 10px;
 }
 
 .input-bar {
@@ -48,6 +75,16 @@
 }
 
 .button {
-    -fx-background-color: #3157d5;
+    -fx-background-color: #255b9a;
     -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #194777;
+    -fx-cursor: hand;
+}
+
+.button:focused {
+    -fx-border-color: #102d4f;
+    -fx-border-radius: 8px;
 }

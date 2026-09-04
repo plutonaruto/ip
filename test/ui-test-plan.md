@@ -1,5 +1,15 @@
 # UI Test Plan
 
+## GUI appearance checks
+
+Launch `phin.Launcher` on Java 25. Verify the office-photo background, supplied
+suited dolphin (upper half in both header and chat) and King avatars,
+the subtitle "underworked, overpaid", absence
+of the coffee footer, and input hint. Send a command with
+Enter and another with Send; check both avatars appear on the appropriate side.
+Resize to the minimum window width and check long messages wrap without hiding
+avatars or input controls. CLI command text below remains unchanged.
+
 The cases below are executed by the project-specific `test-ui` skill. Output comparisons are exact.
 
 The runner compiles sources recursively from `src/main/java` and launches

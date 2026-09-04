@@ -3,9 +3,11 @@ package phin;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -13,6 +15,8 @@ import javafx.util.Duration;
  * Handles user interaction in the main chatbot window.
  */
 public class MainWindow {
+    @FXML
+    private ImageView phinAvatar;
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -42,6 +46,9 @@ public class MainWindow {
      */
     @FXML
     public void initialize() {
+        // Match the chat avatar's upper-half crop while retaining the original asset.
+        phinAvatar.setViewport(new Rectangle2D(0, 0,
+                phinAvatar.getImage().getWidth(), phinAvatar.getImage().getHeight() / 2));
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
