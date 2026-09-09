@@ -89,6 +89,11 @@ public class Phin {
         return tasks != null;
     }
 
+    /**
+     * Dispatches a recognized command to its action and returns the response.
+     *
+     * @throws PhinException If the command arguments are invalid.
+     */
     private String execute(String command, String commandWord) throws PhinException {
         assert isReady() : "Commands must not execute after a failed load";
         switch (commandWord) {
@@ -102,22 +107,50 @@ public class Phin {
             case "mark":
                 // Fallthrough
             case "unmark":
-                int taskIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
-                boolean isDone = commandWord.equals("mark");
-                Task updatedTask = tasks.setDone(taskIndex, isDone);
-                return "    Fine. I've marked this task as " + (isDone ? "done" : "not done") + ":"
-                        + System.lineSeparator() + "      " + updatedTask;
+                return changeTaskStatus(command, commandWord);
             case "delete":
-                int deletedIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
-                Task removedTask = tasks.delete(deletedIndex);
-                return "    Noted. I've removed this task:" + System.lineSeparator() + "      " + removedTask
-                        + System.lineSeparator() + formatTaskCount();
+                return deleteTask(command);
             default:
-                Task task = Parser.parseTask(command);
-                tasks.add(task);
-                return "    Fine. I've added this task:" + System.lineSeparator() + "      " + task
-                        + System.lineSeparator() + formatTaskCount();
+                return addTask(command);
         }
+    }
+
+    /**
+     * Validates a task number, changes its status, and formats the confirmation.
+     *
+     * @throws PhinException If the task number is invalid.
+     */
+    private String changeTaskStatus(String command, String commandWord) throws PhinException {
+        int taskIndex = Parser.parseTaskIndex(command, commandWord, tasks.size());
+        boolean isDone = commandWord.equals("mark");
+        Task updatedTask = tasks.setDone(taskIndex, isDone);
+        return "    Fine. I've marked this task as " + (isDone ? "done" : "not done") + ":"
+                + System.lineSeparator() + "      " + updatedTask;
+    }
+
+    /**
+     * Validates a task number, removes the task, and reports the remaining count.
+     *
+     * @throws PhinException If the task number is invalid.
+     */
+    private String deleteTask(String command) throws PhinException {
+        int deletedIndex = Parser.parseTaskIndex(command, "delete", tasks.size());
+        Task removedTask = tasks.delete(deletedIndex);
+        return "    Noted. I've removed this task:" + System.lineSeparator() + "      " + removedTask
+                + System.lineSeparator() + formatTaskCount();
+    }
+
+    /**
+     * Validates a creation command, adds its task, and reports the new count.
+     *
+     * @throws PhinException If required command fields are missing.
+     * @throws IllegalArgumentException If a date or event range is invalid.
+     */
+    private String addTask(String command) throws PhinException {
+        Task task = Parser.parseTask(command);
+        tasks.add(task);
+        return "    Fine. I've added this task:" + System.lineSeparator() + "      " + task
+                + System.lineSeparator() + formatTaskCount();
     }
 
     private String formatTasks(String heading, List<Task> displayedTasks) {
