@@ -55,13 +55,9 @@ public class TaskList {
      * @return Unmodifiable matching tasks in their original order.
      */
     public List<Task> find(String keyword) {
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.description.contains(keyword)) {
-                matches.add(task);
-            }
-        }
-        return List.copyOf(matches);
+        return tasks.stream()
+                .filter(task -> task.description.contains(keyword))
+                .toList();
     }
 
     /**
