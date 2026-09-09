@@ -57,13 +57,9 @@ public class TaskList {
      */
     public List<Task> find(String keyword) {
         assert keyword != null && !keyword.isBlank() : "The parser must validate the search phrase";
-        List<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.description.contains(keyword)) {
-                matches.add(task);
-            }
-        }
-        return List.copyOf(matches);
+        return tasks.stream()
+                .filter(task -> task.description.contains(keyword))
+                .toList();
     }
 
     /**
