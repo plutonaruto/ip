@@ -113,6 +113,7 @@ public class Parser {
      */
     public static int parseTaskIndex(String command, String commandWord, int taskCount)
             throws PhinException {
+        assert taskCount >= 0 : "A task list cannot have a negative size";
         String indexText = command.substring(commandWord.length()).trim();
         if (indexText.isBlank()) {
             throw new PhinException("Tell me which task to " + commandWord
