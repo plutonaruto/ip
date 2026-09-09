@@ -1,6 +1,6 @@
 # Phin
 
-## Finding tasks (Level 9)
+## Finding tasks 
 
 Use `find book` to search task descriptions for a case-sensitive substring.
 For example, it matches `read book` and `bookshelf`, but not `Book`.
@@ -142,7 +142,7 @@ If loading fails, Phin stops without changing the file. Correct or back up and
 remove the damaged file before restarting. If saving fails, changes remain in
 memory; fix the folder permissions and retry a change before exiting.
 
-## Dates (Level 8)
+## Dates 
 
 Deadlines and event endpoints accept real calendar dates in `yyyy-MM-dd`
 format, for example `deadline return book /by 2019-12-02` or
