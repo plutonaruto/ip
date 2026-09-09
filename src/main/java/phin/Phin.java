@@ -90,6 +90,7 @@ public class Phin {
     }
 
     private String execute(String command, String commandWord) throws PhinException {
+        assert isReady() : "Commands must not execute after a failed load";
         switch (commandWord) {
             case "bye":
                 return "    Finally. Bye.";
