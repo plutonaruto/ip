@@ -44,6 +44,7 @@ public class TaskList {
      * @param task Task to append.
      */
     public void add(Task task) {
+        assert task != null : "Only constructed tasks may be added";
         tasks.add(task);
     }
 
@@ -55,6 +56,7 @@ public class TaskList {
      * @return Unmodifiable matching tasks in their original order.
      */
     public List<Task> find(String keyword) {
+        assert keyword != null && !keyword.isBlank() : "The parser must validate the search phrase";
         List<Task> matches = new ArrayList<>();
         for (Task task : tasks) {
             if (task.description.contains(keyword)) {

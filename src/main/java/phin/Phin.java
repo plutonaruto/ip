@@ -95,6 +95,7 @@ public class Phin {
      * @throws PhinException If the command arguments are invalid.
      */
     private String execute(String command, String commandWord) throws PhinException {
+        assert isReady() : "Commands must not execute after a failed load";
         switch (commandWord) {
             case "bye":
                 return "    Finally. Bye.";
