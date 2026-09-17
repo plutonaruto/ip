@@ -37,7 +37,7 @@ public class DialogBox extends HBox {
         } else {
             avatar.setPreserveRatio(true);
         }
-        avatar.setAccessibleText(isUser ? "You" : "Phin, underworked, overpaid");
+        avatar.setAccessibleText(isUser ? "You" : "Phin");
 
         Region message = type == MessageType.HELP ? createHelpMessage(text) : createTextMessage(text, type);
         message.setMinWidth(0);

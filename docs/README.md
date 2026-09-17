@@ -2,6 +2,8 @@
 
 Phin is a task manager for todos, deadlines, and events.
 
+![Phin graphical interface](Ui.png)
+
 ## Getting help
 
 Enter `help` (or its shortcut `h`) to see every command, its format, and its shortcut inside Phin.
