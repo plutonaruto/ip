@@ -128,4 +128,15 @@ class TaskListTest {
         assertEquals(List.of(task), tasks.asList());
         assertFalse(task.isDone);
     }
+
+    @Test
+    void update_middleTask_replacesOnlySelectedTask() {
+        Task first = new Todo("first");
+        Task original = new Deadline("old", "2024-03-01");
+        Task replacement = new Deadline("new", "2024-03-02");
+        TaskList tasks = new TaskList(List.of(first, original));
+
+        assertSame(replacement, tasks.update(1, replacement));
+        assertEquals(List.of(first, replacement), tasks.asList());
+    }
 }

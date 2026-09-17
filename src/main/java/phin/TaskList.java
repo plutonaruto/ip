@@ -92,6 +92,19 @@ public class TaskList {
     }
 
     /**
+     * Replaces one task with a validated updated copy.
+     *
+     * @param index Zero-based index already validated by the parser.
+     * @param updatedTask Updated task to store at that index.
+     * @return The stored updated task.
+     */
+    public Task update(int index, Task updatedTask) {
+        assert updatedTask != null : "Only a constructed task may replace an existing task";
+        tasks.set(index, updatedTask);
+        return updatedTask;
+    }
+
+    /**
      * Returns an unmodifiable snapshot of the current task ordering.
      * Task objects are shared; collection edits are prevented, but task edits remain visible.
      *

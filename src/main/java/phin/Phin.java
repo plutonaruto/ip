@@ -110,6 +110,8 @@ public class Phin {
                 return changeTaskStatus(command, commandWord);
             case "delete":
                 return deleteTask(command);
+            case "update":
+                return updateTask(command);
             default:
                 return addTask(command);
         }
@@ -138,6 +140,19 @@ public class Phin {
         Task removedTask = tasks.delete(deletedIndex);
         return "    Noted. I've removed this task:" + System.lineSeparator() + "      " + removedTask
                 + System.lineSeparator() + formatTaskCount();
+    }
+
+    /**
+     * Validates requested fields, replaces one task, and confirms its complete updated form.
+     *
+     * @throws PhinException If the task number or update fields are invalid.
+     * @throws IllegalArgumentException If an updated date or event range is invalid.
+     */
+    private String updateTask(String command) throws PhinException {
+        int taskIndex = Parser.parseUpdateIndex(command, tasks.size());
+        Task updatedTask = Parser.parseUpdatedTask(command, tasks.asList().get(taskIndex));
+        tasks.update(taskIndex, updatedTask);
+        return "    Fine. I've updated this task:" + System.lineSeparator() + "      " + updatedTask;
     }
 
     /**

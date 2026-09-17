@@ -39,10 +39,12 @@ class ParserTest {
 
     @Test
     void parseCommandWord_supportedCommands_recognized() throws PhinException {
-        for (String word : new String[] {"list", "bye", "todo", "deadline", "event", "mark", "unmark", "delete"}) {
+        for (String word : new String[] {
+            "list", "bye", "todo", "deadline", "event", "mark", "unmark", "delete", "update"
+        }) {
             assertEquals(word, Parser.parseCommandWord(word));
         }
-        for (String word : new String[] {"todo", "deadline", "event", "mark", "unmark", "delete"}) {
+        for (String word : new String[] {"todo", "deadline", "event", "mark", "unmark", "delete", "update"}) {
             assertEquals(word, Parser.parseCommandWord(word + " argument"));
         }
     }
@@ -131,5 +133,40 @@ class ParserTest {
             assertThrows(PhinException.class, () -> Parser.parseTaskIndex("delete " + number, "delete", 3));
         }
         assertThrows(PhinException.class, () -> Parser.parseTaskIndex("mark 1", "mark", 0));
+    }
+
+    @Test
+    void parseUpdatedTask_validFields_preservesTypeStatusAndUnspecifiedFields() throws PhinException {
+        Event original = new Event("meeting", "2024-03-01", "2024-03-02");
+        original.markAsDone();
+
+        assertEquals(0, Parser.parseUpdateIndex("update 1 /to 2024-03-03", 1));
+        Event updated = assertInstanceOf(Event.class,
+                Parser.parseUpdatedTask("update 1 /description project meeting /to 2024-03-03", original));
+        assertEquals("project meeting", updated.description);
+        assertEquals(LocalDate.of(2024, 3, 1), updated.from);
+        assertEquals(LocalDate.of(2024, 3, 3), updated.to);
+        assertEquals("X", updated.getStatusIcon());
+    }
+
+    @Test
+    void parseUpdatedTask_invalidFields_rejectedWithoutChangingOriginal() {
+        Deadline original = new Deadline("submit report", "2024-03-02");
+        for (String command : new String[] {"update 1", "update 1 /description", "update 1 /from 2024-03-01",
+                "update 1 /by 2024-03-03 /by 2024-03-04", "update 1 /when 2024-03-03"}) {
+            assertThrows(PhinException.class, () -> Parser.parseUpdatedTask(command, original), command);
+        }
+        assertEquals("submit report", original.description);
+        assertEquals(LocalDate.of(2024, 3, 2), original.by);
+    }
+
+    @Test
+    void parseUpdatedTask_invalidDateOrRange_rejectedWithoutChangingOriginal() {
+        Event original = new Event("meeting", "2024-03-01", "2024-03-03");
+        for (String command : new String[] {"update 1 /to 2024-02-30", "update 1 /from 2024-03-04"}) {
+            assertThrows(IllegalArgumentException.class, () -> Parser.parseUpdatedTask(command, original), command);
+        }
+        assertEquals(LocalDate.of(2024, 3, 1), original.from);
+        assertEquals(LocalDate.of(2024, 3, 3), original.to);
     }
 }

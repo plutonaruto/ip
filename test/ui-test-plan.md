@@ -215,7 +215,7 @@ Phin
 I'm Phin. Apparently I have to deal with this.
 What do you want?
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -659,12 +659,12 @@ ____________________________________________________________
       [T][ ] keep
     Now you have 1 tasks in the list.
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
 ____________________________________________________________
     Fine. I've marked this task as done:
       [T][X] keep
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
 ____________________________________________________________
     Seriously? Tell me which task to unmark. Try: unmark NUMBER
 ____________________________________________________________
@@ -673,7 +673,7 @@ ____________________________________________________________
 ____________________________________________________________
     Seriously? Task numbers are, inconveniently, numbers. Try: mark NUMBER
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
 ____________________________________________________________
     Fine. I've added this task:
       [T][ ] second
@@ -751,7 +751,7 @@ ____________________________________________________________
     1.[T][ ] read book
     2.[D][X] return book (by: Mar 01 2024)
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, or find.
+    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
 ____________________________________________________________
     Fine. I've added this task:
       [E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
@@ -790,6 +790,95 @@ ____________________________________________________________
     1.[T][ ] read book
     2.[D][X] return book (by: Mar 01 2024)
     3.[E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+## Test case: Update task details and preserve unchanged state
+
+Aim: Update each supported task type, interleave invalid updates, and restart to verify valid changes persist while rejected input changes nothing.
+
+### Input
+
+```input
+todo read book
+deadline submit draft /by 2024-03-02
+event project meeting /from 2024-03-01 /to 2024-03-03
+mark 3
+update 1 /description read two books
+update 2 /description submit final report /by 2024-03-04
+update 3 /to 2024-03-05
+update 1 /by 2024-03-06
+update 3 /from 2024-03-06
+update 2 /by 2024-02-30
+update 2 /description
+update 9 /description missing
+list
+bye
+# restart
+list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] read book
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [D][ ] submit draft (by: Mar 02 2024)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [E][ ] project meeting (from: Mar 01 2024 to: Mar 03 2024)
+    Now you have 3 tasks in the list.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [E][X] project meeting (from: Mar 01 2024 to: Mar 03 2024)
+____________________________________________________________
+    Fine. I've updated this task:
+      [T][ ] read two books
+____________________________________________________________
+    Fine. I've updated this task:
+      [D][ ] submit final report (by: Mar 04 2024)
+____________________________________________________________
+    Fine. I've updated this task:
+      [E][X] project meeting (from: Mar 01 2024 to: Mar 05 2024)
+____________________________________________________________
+    Seriously? Those fields do not apply to this task type.
+____________________________________________________________
+    Seriously? An event's end date cannot be before its start date.
+____________________________________________________________
+    Seriously? Use a valid date in yyyy-MM-dd format (e.g., 2019-10-15).
+____________________________________________________________
+    Seriously? Update fields cannot be blank.
+____________________________________________________________
+    Seriously? Task 9 isn't in the list. Pick a number from 1 to 3.
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read two books
+    2.[D][ ] submit final report (by: Mar 04 2024)
+    3.[E][X] project meeting (from: Mar 01 2024 to: Mar 05 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read two books
+    2.[D][ ] submit final report (by: Mar 04 2024)
+    3.[E][X] project meeting (from: Mar 01 2024 to: Mar 05 2024)
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________

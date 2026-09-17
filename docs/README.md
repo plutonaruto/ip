@@ -1,30 +1,30 @@
 # Phin User Guide
 
-// Update the title above to match the actual product name
+Phin is a task manager for todos, deadlines, and events.
 
-// Product screenshot goes here
+## Updating a task
 
-// Product intro goes here
+Use `update NUMBER` followed by one or more fields. Fields not included in the
+command stay unchanged, as do the task type and completion status.
 
-## Adding deadlines
+- Every task supports `/description TEXT`.
+- Deadlines also support `/by yyyy-MM-dd`.
+- Events also support `/from yyyy-MM-dd` and `/to yyyy-MM-dd`.
 
-// Describe the action and its outcome.
+For example, this command changes only the end date of task 3:
 
-// Give examples of usage
+`update 3 /to 2024-03-05`
 
-Example: `keyword (optional arguments)`
+Phin responds with the complete updated task:
 
-// A description of the expected outcome goes here
-
+```text
+    Fine. I've updated this task:
+      [E][ ] project meeting (from: Mar 01 2024 to: Mar 05 2024)
 ```
-expected output
-```
 
-## Feature ABC
+You may update multiple fields together:
 
-// Feature details
+`update 2 /description submit final report /by 2024-03-08`
 
-
-## Feature XYZ
-
-// Feature details
+Use each field at most once. Phin rejects blank, unknown, or type-incompatible
+fields. It also rejects invalid dates and event ranges without changing the task.

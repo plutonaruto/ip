@@ -1,5 +1,18 @@
 # Phin
 
+## Updating tasks
+
+Use `update NUMBER` with one or more fields to edit a task without deleting it.
+For example, `update 3 /to 2024-03-05` changes only an event's end date, while
+`update 2 /description submit final report /by 2024-03-08` changes both a
+deadline's description and date. Available fields are `/description` for every
+task, `/by` for deadlines, and `/from` and `/to` for events.
+
+The task type, completion status, and all omitted fields remain unchanged.
+Blank, repeated, unknown, or type-incompatible fields are rejected without
+changing the task. Dates use `yyyy-MM-dd`, and an updated event end date cannot
+precede its start date.
+
 ## Finding tasks 
 
 Use `find book` to search task descriptions for a case-sensitive substring.
@@ -11,7 +24,7 @@ keywords are rejected with usage guidance.
 
 Matches retain their original order, type, and completion status. Results
 are numbered from 1 for display only: use `list` to obtain task numbers for
-`mark`, `unmark`, and `delete`. With no matches, only the matching-tasks
+`mark`, `unmark`, `delete`, and `update`. With no matches, only the matching-tasks
 heading is printed. Searching never modifies tasks or writes the saved file.
 
 Phin is a chatbot written in Java. Given below are instructions on how to set it up.
@@ -131,7 +144,7 @@ java -cp out phin.Phin
 
 For development, run Phin with the project root as the working directory;
 for the distributed JAR, run it from the folder containing the JAR. Tasks are loaded from
-`data/phin.txt` at startup and saved after add, mark, unmark, and delete commands.
+`data/phin.txt` at startup and saved after add, mark, unmark, delete, and update commands.
 The folder is created on the first save and is excluded from Git.
 
 Records use `TYPE|STATUS|DESCRIPTION` with deadline or event time fields appended.
