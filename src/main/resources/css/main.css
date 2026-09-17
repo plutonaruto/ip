@@ -1,8 +1,5 @@
 .root {
-    -fx-background-color: #e8ecf0;
-    -fx-background-image: url("../images/office.jpg");
-    -fx-background-size: cover;
-    -fx-background-position: center;
+    -fx-background-color: #eef3f6;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 14px;
 }
@@ -13,30 +10,25 @@
 }
 
 .scroll-pane {
-    -fx-background-color: rgba(238, 242, 246, 0.78);
+    -fx-background-color: #f4f7f9;
     -fx-background-insets: 0;
     -fx-padding: 0;
 }
 
 .header {
-    -fx-padding: 16px 22px;
-    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-padding: 12px 18px;
+    -fx-background-color: white;
     -fx-border-color: transparent transparent #c4dee9 transparent;
 }
 
 .title {
-    -fx-font-size: 25px;
+    -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #173b56;
 }
 
-.subtitle {
-    -fx-text-fill: #4b6475;
-    -fx-font-size: 13px;
-}
-
 #dialogContainer {
-    -fx-padding: 18px;
+    -fx-padding: 14px 16px;
 }
 
 .dialog-box {
@@ -44,7 +36,8 @@
 }
 
 .user-message,
-.phin-message {
+.phin-message,
+.error-message {
     -fx-background-radius: 10px;
     -fx-padding: 10px 14px;
 }
@@ -61,6 +54,48 @@
     -fx-border-radius: 10px;
 }
 
+.help-message {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-color: #d5dfea;
+    -fx-border-radius: 10px;
+    -fx-padding: 14px 16px;
+}
+
+.help-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #173b56;
+    -fx-padding: 0 0 5px 0;
+}
+
+.help-heading {
+    -fx-font-weight: bold;
+    -fx-text-fill: #255b9a;
+    -fx-padding: 7px 0 1px 0;
+}
+
+.help-command {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-text-fill: #263746;
+    -fx-padding: 0 0 0 14px;
+}
+
+.help-note {
+    -fx-text-fill: #5b6b78;
+    -fx-font-style: italic;
+    -fx-padding: 8px 0 0 0;
+}
+
+.error-message {
+    -fx-text-fill: #7a1f2b;
+    -fx-background-color: #fff1f2;
+    -fx-border-color: #e7aab1;
+    -fx-border-width: 1px 1px 1px 4px;
+    -fx-border-radius: 10px;
+    -fx-font-weight: bold;
+}
+
 .input-bar {
     -fx-padding: 12px;
     -fx-spacing: 8px;
@@ -72,6 +107,12 @@
 .button {
     -fx-background-radius: 8px;
     -fx-padding: 9px 12px;
+}
+
+.text-field:focused {
+    -fx-border-color: #255b9a;
+    -fx-border-radius: 8px;
+    -fx-background-color: white;
 }
 
 .button {

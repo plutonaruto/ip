@@ -2,6 +2,13 @@
 
 Phin is a task manager for todos, deadlines, and events.
 
+## Getting help
+
+Enter `help` (or its shortcut `h`) to see every command, its format, and its shortcut inside Phin.
+Commands accept the following shortcuts: `l` for `list`, `t` for `todo`, `dl` for `deadline`, `e` for
+`event`, `m` for `mark`, `um` for `unmark`, `del` for `delete`, `u` for `update`, `f` for `find`, and
+`q` for `bye`.
+
 ## Updating a task
 
 Use `update NUMBER` followed by one or more fields. Fields not included in the

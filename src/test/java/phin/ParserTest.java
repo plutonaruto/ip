@@ -32,7 +32,7 @@ class ParserTest {
                     () -> Parser.parseFindKeyword(command));
             assertEquals("Tell me what to find. Try: find KEYWORD", exception.getMessage());
         }
-        for (String command : new String[] {"findbook", "find\tbook", "Find book", "list", "todo book"}) {
+        for (String command : new String[] {"findbook", "Find book", "list", "todo book"}) {
             assertThrows(PhinException.class, () -> Parser.parseFindKeyword(command));
         }
     }
@@ -40,19 +40,20 @@ class ParserTest {
     @Test
     void parseCommandWord_supportedCommands_recognized() throws PhinException {
         for (String word : new String[] {
-            "list", "bye", "todo", "deadline", "event", "mark", "unmark", "delete", "update"
+            "help", "list", "bye", "todo", "deadline", "event", "mark", "unmark", "delete", "update"
         }) {
             assertEquals(word, Parser.parseCommandWord(word));
         }
         for (String word : new String[] {"todo", "deadline", "event", "mark", "unmark", "delete", "update"}) {
             assertEquals(word, Parser.parseCommandWord(word + " argument"));
+            assertEquals(word, Parser.parseCommandWord("  " + word + "\targument  "));
         }
     }
 
     @Test
     void parseCommandWord_wrongBoundaries_rejected() {
-        for (String command : new String[] {"", " ", "TODO book", " todo book", "todoist book",
-                "todo\tbook", "list extra", "list ", "bye extra", "marking 1", "unknown"}) {
+        for (String command : new String[] {"", " ", "TODO book", "todoist book",
+                "list extra", "bye extra", "marking 1", "unknown"}) {
             assertThrows(PhinException.class, () -> Parser.parseCommandWord(command), command);
         }
     }
@@ -133,6 +134,31 @@ class ParserTest {
             assertThrows(PhinException.class, () -> Parser.parseTaskIndex("delete " + number, "delete", 3));
         }
         assertThrows(PhinException.class, () -> Parser.parseTaskIndex("mark 1", "mark", 0));
+    }
+
+    @Test
+    void expandShortcut_allShortcuts_expandsOnlyCommandWord() {
+        assertEquals("help", Parser.expandShortcut("h"));
+        assertEquals("list", Parser.expandShortcut(" l "));
+        assertEquals("todo  read book", Parser.expandShortcut("t  read book"));
+        assertEquals("deadline submit /by 2024-03-01", Parser.expandShortcut("dl submit /by 2024-03-01"));
+        assertEquals("event meeting /from 2024-03-01 /to 2024-03-02",
+                Parser.expandShortcut("e meeting /from 2024-03-01 /to 2024-03-02"));
+        assertEquals("mark 1", Parser.expandShortcut("m 1"));
+        assertEquals("unmark 1", Parser.expandShortcut("um 1"));
+        assertEquals("delete 1", Parser.expandShortcut("del 1"));
+        assertEquals("update 1 /description revised", Parser.expandShortcut("u 1 /description revised"));
+        assertEquals("find book", Parser.expandShortcut("f book"));
+        assertEquals("bye", Parser.expandShortcut("q"));
+        assertEquals("todoist unchanged", Parser.expandShortcut("todoist unchanged"));
+    }
+
+    @Test
+    void parseTask_surroundingWhitespaceAndTabs_accepted() throws PhinException {
+        Todo todo = assertInstanceOf(Todo.class, Parser.parseTask("\t todo\twrite tests  \t"));
+        assertEquals("write tests", todo.description);
+        assertEquals(0, Parser.parseTaskIndex("  mark\t1  ", "mark", 1));
+        assertEquals("book", Parser.parseFindKeyword("\tfind\tbook\t"));
     }
 
     @Test

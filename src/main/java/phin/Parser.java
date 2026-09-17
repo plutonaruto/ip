@@ -9,6 +9,18 @@ import java.util.regex.Pattern;
  * Interprets console commands without changing tasks or performing input/output.
  */
 public class Parser {
+    private static final Map<String, String> SHORTCUTS = Map.ofEntries(
+            Map.entry("h", "help"),
+            Map.entry("l", "list"),
+            Map.entry("t", "todo"),
+            Map.entry("dl", "deadline"),
+            Map.entry("e", "event"),
+            Map.entry("m", "mark"),
+            Map.entry("um", "unmark"),
+            Map.entry("del", "delete"),
+            Map.entry("u", "update"),
+            Map.entry("f", "find"),
+            Map.entry("q", "bye"));
     /**
      * Recognizes each supported slash-prefixed field in an update command.
      */
@@ -28,19 +40,45 @@ public class Parser {
      * @throws PhinException if the command is unknown or takes unexpected arguments.
      */
     public static String parseCommandWord(String command) throws PhinException {
-        if (command.equals("list") || command.equals("bye")) {
+        command = command.strip();
+        if (command.equals("help") || command.equals("list") || command.equals("bye")) {
             return command;
         }
         for (String word : new String[] {
             "mark", "unmark", "delete", "todo", "deadline", "event", "find", "update"
         }) {
-            if (command.equals(word) || command.startsWith(word + " ")) {
+            if (command.equals(word) || command.matches(Pattern.quote(word) + "\\s+.*")) {
                 return word;
             }
         }
         throw new PhinException(
-                "That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete,"
-                        + " update, or find.");
+                "That command means nothing to me. Type help to see every command.");
+    }
+
+    /**
+     * Replaces a recognized shortcut at the start of a command with its full command word.
+     * Descriptions and other arguments remain unchanged.
+     *
+     * @param command Complete, possibly abbreviated command.
+     * @return Trimmed command with its shortcut expanded, if applicable.
+     */
+    public static String expandShortcut(String command) {
+        String trimmedCommand = command.strip();
+        int firstWhitespace = -1;
+        for (int i = 0; i < trimmedCommand.length(); i++) {
+            if (Character.isWhitespace(trimmedCommand.charAt(i))) {
+                firstWhitespace = i;
+                break;
+            }
+        }
+        String commandWord = firstWhitespace < 0
+                ? trimmedCommand
+                : trimmedCommand.substring(0, firstWhitespace);
+        String expandedWord = SHORTCUTS.get(commandWord);
+        if (expandedWord == null) {
+            return trimmedCommand;
+        }
+        return expandedWord + trimmedCommand.substring(commandWord.length());
     }
 
     /**
@@ -51,6 +89,7 @@ public class Parser {
      * @throws PhinException If the command is not find or its phrase is blank.
      */
     public static String parseFindKeyword(String command) throws PhinException {
+        command = command.strip();
         if (!parseCommandWord(command).equals("find")) {
             throw new PhinException("Expected a find command. Try: find KEYWORD");
         }
@@ -68,6 +107,7 @@ public class Parser {
      * @throws IllegalArgumentException if a date or event range is invalid.
      */
     public static Task parseTask(String command) throws PhinException {
+        command = command.strip();
         switch (parseCommandWord(command)) {
             case "todo":
                 String description = command.substring("todo".length()).trim();
@@ -125,6 +165,7 @@ public class Parser {
      */
     public static int parseTaskIndex(String command, String commandWord, int taskCount)
             throws PhinException {
+        command = command.strip();
         assert taskCount >= 0 : "A task list cannot have a negative size";
         String indexText = command.substring(commandWord.length()).trim();
         if (indexText.isBlank()) {
@@ -156,6 +197,7 @@ public class Parser {
      * @throws PhinException If the task number is missing, invalid, or outside the list.
      */
     public static int parseUpdateIndex(String command, int taskCount) throws PhinException {
+        command = command.strip();
         String arguments = command.substring("update".length()).trim();
         int firstField = arguments.indexOf(" /");
         String indexArgument = firstField < 0 ? arguments : arguments.substring(0, firstField);
@@ -173,6 +215,7 @@ public class Parser {
      */
     public static Task parseUpdatedTask(String command, Task original) throws PhinException {
         assert original != null : "Only an existing task may be updated";
+        command = command.strip();
         String arguments = command.substring("update".length()).trim();
         int firstField = arguments.indexOf(" /");
         if (firstField < 0) {

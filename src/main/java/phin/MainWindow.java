@@ -4,6 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -62,17 +63,28 @@ public class MainWindow {
             return;
         }
 
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input),
-                DialogBox.getPhinDialog(phin.getResponse(input).trim()));
+        String response = phin.getResponse(input).trim();
+        Node responseDialog;
+        if (isErrorResponse(response)) {
+            responseDialog = DialogBox.getErrorDialog(response);
+        } else if (response.startsWith("PHIN COMMAND GUIDE")) {
+            responseDialog = DialogBox.getHelpDialog(response);
+        } else {
+            responseDialog = DialogBox.getPhinDialog(response);
+        }
+        dialogContainer.getChildren().addAll(DialogBox.getUserDialog(input.strip()), responseDialog);
         userInput.clear();
 
-        if (input.equals("bye")) {
+        if (input.strip().equals("bye") || input.strip().equals("q")) {
             userInput.setDisable(true);
             sendButton.setDisable(true);
             PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished(event -> Platform.exit());
             pause.play();
         }
+    }
+
+    private static boolean isErrorResponse(String response) {
+        return response.startsWith("Seriously?") || response.startsWith("Couldn't");
     }
 }

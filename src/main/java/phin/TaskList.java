@@ -92,6 +92,31 @@ public class TaskList {
     }
 
     /**
+     * Checks whether another task has the same type and user-visible details.
+     * Completion status is deliberately ignored because it does not make a task unique.
+     *
+     * @param candidate Task whose details should be compared.
+     * @return True if an equivalent task is already stored.
+     */
+    public boolean containsEquivalent(Task candidate) {
+        assert candidate != null : "Only a constructed task may be compared";
+        return tasks.stream().anyMatch(task -> hasSameDetails(task, candidate));
+    }
+
+    private static boolean hasSameDetails(Task first, Task second) {
+        if (first.getClass() != second.getClass() || !first.description.equals(second.description)) {
+            return false;
+        }
+        if (first instanceof Deadline firstDeadline && second instanceof Deadline secondDeadline) {
+            return firstDeadline.by.equals(secondDeadline.by);
+        }
+        if (first instanceof Event firstEvent && second instanceof Event secondEvent) {
+            return firstEvent.from.equals(secondEvent.from) && firstEvent.to.equals(secondEvent.to);
+        }
+        return true;
+    }
+
+    /**
      * Replaces one task with a validated updated copy.
      *
      * @param index Zero-based index already validated by the parser.

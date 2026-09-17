@@ -139,4 +139,18 @@ class TaskListTest {
         assertSame(replacement, tasks.update(1, replacement));
         assertEquals(List.of(first, replacement), tasks.asList());
     }
+
+    @Test
+    void containsEquivalent_sameDetailsIgnoresStatusButRespectsTypeAndDates() {
+        Todo todo = new Todo("read book");
+        Deadline deadline = new Deadline("submit", "2024-03-01");
+        TaskList tasks = new TaskList(List.of(todo, deadline));
+        Todo completedCopy = new Todo("read book");
+        completedCopy.markAsDone();
+
+        assertTrue(tasks.containsEquivalent(completedCopy));
+        assertTrue(tasks.containsEquivalent(new Deadline("submit", "2024-03-01")));
+        assertFalse(tasks.containsEquivalent(new Deadline("submit", "2024-03-02")));
+        assertFalse(tasks.containsEquivalent(new Deadline("read book", "2024-03-01")));
+    }
 }

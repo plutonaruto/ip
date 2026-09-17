@@ -12,23 +12,21 @@
 <VBox prefHeight="680.0" prefWidth="580.0" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="phin.MainWindow">
-    <HBox alignment="CENTER_LEFT" spacing="14.0" styleClass="header">
-        <ImageView fx:id="phinAvatar" fitWidth="64.0" fitHeight="64.0"
+    <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="header">
+        <ImageView fx:id="phinAvatar" fitWidth="52.0" fitHeight="52.0"
                    preserveRatio="true" accessibleText="Phin the suited dolphin">
             <image><Image url="@../images/phin.png" /></image>
         </ImageView>
-        <VBox spacing="3.0" HBox.hgrow="ALWAYS">
-            <Label text="Phin" styleClass="title" />
-            <Label text="underworked, overpaid" styleClass="subtitle" />
-        </VBox>
+        <Label text="Phin" styleClass="title" HBox.hgrow="ALWAYS" />
     </HBox>
     <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS">
         <content>
-            <VBox fx:id="dialogContainer" spacing="8.0" />
+            <VBox fx:id="dialogContainer" spacing="7.0" />
         </content>
     </ScrollPane>
     <HBox styleClass="input-bar">
-        <TextField fx:id="userInput" onAction="#handleUserInput" promptText="What now? Type a command..."
+        <TextField fx:id="userInput" onAction="#handleUserInput"
+                   promptText="Try: todo read a book, list, or find book"
                    accessibleText="Command input"
                    HBox.hgrow="ALWAYS" />
         <Button fx:id="sendButton" defaultButton="true" onAction="#handleUserInput" text="Send" />

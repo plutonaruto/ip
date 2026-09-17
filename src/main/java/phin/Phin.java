@@ -9,6 +9,23 @@ import java.util.List;
 public class Phin {
     private static final String LOADING_ERROR = "Couldn't load data/phin.txt. Check the file before restarting;"
             + " it has not been changed.";
+    private static final String HELP_MESSAGE = String.join(System.lineSeparator(),
+            "    PHIN COMMAND GUIDE",
+            "    Add tasks",
+            "      todo (t) DESCRIPTION",
+            "      deadline (dl) DESCRIPTION /by yyyy-MM-dd",
+            "      event (e) DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd",
+            "    Manage tasks",
+            "      list (l)",
+            "      mark (m) NUMBER",
+            "      unmark (um) NUMBER",
+            "      delete (del) NUMBER",
+            "      update (u) NUMBER /description TEXT [/by DATE | /from DATE /to DATE]",
+            "      find (f) KEYWORD",
+            "    Other",
+            "      help (h)    Show this guide",
+            "      bye (q)     Exit Phin",
+            "    Text in parentheses is the shortcut. Replace CAPITALIZED words with your details.");
 
     private final Storage storage = new Storage();
     private final TaskList tasks;
@@ -46,7 +63,7 @@ public class Phin {
             String command = ui.readCommand();
             ui.showResponse(phin.getResponse(command));
             ui.showLine();
-            if (command.equals("bye")) {
+            if (command.strip().equals("bye") || command.strip().equals("q")) {
                 break;
             }
         }
@@ -64,9 +81,11 @@ public class Phin {
         }
 
         try {
+            command = Parser.expandShortcut(command);
             String commandWord = Parser.parseCommandWord(command);
             String response = execute(command, commandWord);
-            if (!commandWord.equals("list") && !commandWord.equals("find") && !commandWord.equals("bye")) {
+            if (!commandWord.equals("help") && !commandWord.equals("list")
+                    && !commandWord.equals("find") && !commandWord.equals("bye")) {
                 try {
                     storage.save(tasks.asList());
                 } catch (IOException | SecurityException exception) {
@@ -97,6 +116,8 @@ public class Phin {
     private String execute(String command, String commandWord) throws PhinException {
         assert isReady() : "Commands must not execute after a failed load";
         switch (commandWord) {
+            case "help":
+                return HELP_MESSAGE;
             case "bye":
                 return "    Finally. Bye.";
             case "list":
@@ -163,6 +184,9 @@ public class Phin {
      */
     private String addTask(String command) throws PhinException {
         Task task = Parser.parseTask(command);
+        if (tasks.containsEquivalent(task)) {
+            throw new PhinException("That task is already in the list.");
+        }
         tasks.add(task);
         return "    Fine. I've added this task:" + System.lineSeparator() + "      " + task
                 + System.lineSeparator() + formatTaskCount();

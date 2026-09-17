@@ -19,12 +19,22 @@ public class Storage {
      * Creates storage using the default data file location.
      */
     public Storage() {
+        this(Path.of("data", "phin.txt"));
+    }
+
+    /**
+     * Creates storage at a supplied location for isolated tests.
+     *
+     * @param file Data file to read and replace.
+     */
+    Storage(Path file) {
+        this.file = file;
     }
 
     /**
      * Location of the saved tasks, relative to the working directory.
      */
-    private final Path file = Path.of("data", "phin.txt");
+    private final Path file;
 
     /**
      * Loads saved tasks, rejecting corrupt data to prevent a later accidental overwrite.

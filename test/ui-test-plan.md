@@ -1,12 +1,108 @@
 # UI Test Plan
 
+## Test case: Show command guide and accept shortcuts
+
+Aim: Present every command in a readable guide and verify that the displayed shortcuts work.
+
+### Input
+
+```input
+h
+t read book
+l
+q
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    PHIN COMMAND GUIDE
+    Add tasks
+      todo (t) DESCRIPTION
+      deadline (dl) DESCRIPTION /by yyyy-MM-dd
+      event (e) DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd
+    Manage tasks
+      list (l)
+      mark (m) NUMBER
+      unmark (um) NUMBER
+      delete (del) NUMBER
+      update (u) NUMBER /description TEXT [/by DATE | /from DATE /to DATE]
+      find (f) KEYWORD
+    Other
+      help (h)    Show this guide
+      bye (q)     Exit Phin
+    Text in parentheses is the shortcut. Replace CAPITALIZED words with your details.
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] read book
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][ ] read book
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
+## Test case: Accept harmless whitespace and reject duplicate tasks
+
+Aim: Accept leading, trailing, repeated, and tab whitespace while ensuring duplicate input does not change the list.
+
+### Input
+
+```input
+   todo   read book
+todo read book
+deadline submit /by 2024-03-01
+deadline submit /by 2024-03-01
+mark   1
+   list
+bye
+```
+
+### Expected output
+
+```expected
+____________________________________________________________
+Phin
+I'm Phin. Apparently I have to deal with this.
+What do you want?
+____________________________________________________________
+    Fine. I've added this task:
+      [T][ ] read book
+    Now you have 1 tasks in the list.
+____________________________________________________________
+    Seriously? That task is already in the list.
+____________________________________________________________
+    Fine. I've added this task:
+      [D][ ] submit (by: Mar 01 2024)
+    Now you have 2 tasks in the list.
+____________________________________________________________
+    Seriously? That task is already in the list.
+____________________________________________________________
+    Fine. I've marked this task as done:
+      [T][X] read book
+____________________________________________________________
+    Here are the tasks in your list:
+    1.[T][X] read book
+    2.[D][ ] submit (by: Mar 01 2024)
+____________________________________________________________
+    Finally. Bye.
+____________________________________________________________
+```
+
 ## GUI appearance checks
 
-Launch `phin.Launcher` on Java 25. Verify the office-photo background, supplied
+Launch `phin.Launcher` on Java 25. Verify the clean neutral background, supplied
 suited dolphin (upper half in both header and chat) and King avatars,
-the subtitle "underworked, overpaid", absence
-of the coffee footer, and input hint. Send a command with
+the header contains only the product name "Phin", and the input hint is visible. Send a command with
 Enter and another with Send; check both avatars appear on the appropriate side.
+Run an invalid command and check that its response uses the red error style.
 Resize to the minimum window width and check long messages wrap without hiding
 avatars or input controls. CLI command text below remains unchanged.
 
@@ -215,7 +311,7 @@ Phin
 I'm Phin. Apparently I have to deal with this.
 What do you want?
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
+    Seriously? That command means nothing to me. Type help to see every command.
 ____________________________________________________________
     Finally. Bye.
 ____________________________________________________________
@@ -659,12 +755,12 @@ ____________________________________________________________
       [T][ ] keep
     Now you have 1 tasks in the list.
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
+    Seriously? That command means nothing to me. Type help to see every command.
 ____________________________________________________________
     Fine. I've marked this task as done:
       [T][X] keep
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
+    Seriously? That command means nothing to me. Type help to see every command.
 ____________________________________________________________
     Seriously? Tell me which task to unmark. Try: unmark NUMBER
 ____________________________________________________________
@@ -673,7 +769,7 @@ ____________________________________________________________
 ____________________________________________________________
     Seriously? Task numbers are, inconveniently, numbers. Try: mark NUMBER
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
+    Seriously? That command means nothing to me. Type help to see every command.
 ____________________________________________________________
     Fine. I've added this task:
       [T][ ] second
@@ -751,7 +847,7 @@ ____________________________________________________________
     1.[T][ ] read book
     2.[D][X] return book (by: Mar 01 2024)
 ____________________________________________________________
-    Seriously? That command means nothing to me. Try list, todo, deadline, event, mark, unmark, delete, update, or find.
+    Seriously? That command means nothing to me. Type help to see every command.
 ____________________________________________________________
     Fine. I've added this task:
       [E][ ] bookshelf (from: Mar 01 2024 to: Mar 02 2024)
